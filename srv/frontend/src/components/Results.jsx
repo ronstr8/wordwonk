@@ -67,7 +67,7 @@ const Results = ({ results = [], summary = "", is_solo = false, is_early_end = f
                                     <span className="rank">{i + 1}</span>
                                     <span className="player-id">{playerNames[res.player] || res.player}</span>
                                     <span className="player-word">{res.word}</span>
-                                    <span className="player-score">{res.score}</span>
+                                    <span className="player-score">{res.is_dupe ? '🦜' : res.score}</span>
                                 </div>
                                 <div className="bubble-details">
                                     <div className="detail-item">
