@@ -8,6 +8,7 @@ has 'app' => ( is => 'ro', required => 1 );
 sub calculate_results ($self, $plays, $game_lang, $game_started_at = undef, $rack_size = 8) {
     my $scorer = $self->app->scorer;
     my $quick_bonus_seconds = $ENV{QUICK_BONUS_SECONDS} || 5;
+    my $unique_word_bonus = defined $ENV{UNIQUE_WORD_BONUS} ? $ENV{UNIQUE_WORD_BONUS} : 1;
     
     my %word_to_players;
     my %player_bonuses;  # player_id -> { duplicates => count, length_bonus => count, unique => count, quick_bonus => count, duped_by => [ { name => nickname, bonus => 1 } ] }
@@ -62,9 +63,9 @@ sub calculate_results ($self, $plays, $game_lang, $game_started_at = undef, $rac
                 };
             }
         } else {
-            # Unique word bonus (+2)
+            # Unique word bonus
             my $player_id = $players->[0];
-            $player_bonuses{$player_id}{unique} = 2;
+            $player_bonuses{$player_id}{unique} = $unique_word_bonus;
         }
     }
     

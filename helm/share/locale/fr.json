@@ -26,7 +26,8 @@
         "reload": "RECHARGER LA PAGE",
         "accepted": "ACCEPTÉ !",
         "error_word_not_found": "On ne branle pas '{{word}}'.",
-        "rules_summary": "Wordwank est un duel de vocabulaire à grande vitesse ! Utilisez vos jetons pour former le mot le plus payant. Les valeurs des lettres sont basées sur leur fréquence dans la chaussette de branlette : les lettres courantes valent 1 point, tandis que les plus rares rapportent progressivement plus (up to 9 points). Les deux lettres 'Licornes' les plus rares valent 10 points ! Une lettre par jour vaut 7 points. Le score est dynamique : mot Unique (+5) ou Bonus de Longueur (+5 pour 6 lettres, doublé pour chaque lettre suivante). Attention : les doublons valent 0 point pour vous, mais accordent un bonus au premier joueur !",
+        "played_word": "{{player}} a branlé un mot de {{tile_count}} lettres pour {{raw_points}} points.",
+        "rules_summary": "Wordwank est un duel de vocabulaire à grande vitesse ! Utilisez vos jetons pour former le mot le plus payant. Les valeurs des lettres sont basées sur leur fréquence dans la chaussette de branlette : les lettres courantes valent 1 point, tandis que les plus rares rapportent progressivement plus (up to 9 points). Les deux lettres 'Licornes' les plus rares valent 10 points ! Une lettre par jour vaut 7 points. Le score est dynamique : mot Unique ou Bonus de Longueur (+5 pour 6 lettres, doublé pour chaque lettre suivante). Attention : les doublons valent 0 point pour vous, mais accordent un bonus au premier joueur !",
         "tile_frequencies": "Fréquence des Lettres",
         "donate_title": "FAIRE UN DON",
         "donate_desc": "Vous aimez le jeu ? Super, moi aussi ! Salut, je suis Ron \"Quinn\" Straight, et j'ai écrit ce truc avec mes amis artificiels. Je suis un vieux hacker de la génération X avec deux filles à l'université, et je suis au chômage depuis plus d'un ans, donc chaque petit geste compte. Quand vous le sentez. Je vous aime, les gars.",
@@ -59,7 +60,8 @@
         "on": "OUI",
         "off": "NON",
         "chat_placeholder": "Tapez un message...",
-        "chat_send": "ENVOYER"
+        "chat_send": "ENVOYER",
+        "chat_format": "<v>{{player}}</v>: {{text}}"
     },
     "results": {
         "title": "PARTIE TERMINÉE",
@@ -85,7 +87,10 @@
         "suggested_missed": "J'aurais branlé {{word}}.",
         "suggested_word_title": "Occasion Manquée",
         "suggested_word_desc": "Tu aurais pu jouer ça !",
-        "global_announce": "{{winner}} a gagné avec {{word}} pour {{score}} pts !"
+        "global_announce": "{{winner}} a gagné avec {{word}} pour {{score}} points !",
+        "winner_summary": "{{name}} a gagné avec {{word}} pour {{score}} points !",
+        "no_winner": "Aucun gagnant cette manche.",
+        "title_premature": "CLIMAX PRÉMATURÉ"
     },
     "auth": {
         "welcome_back": "Bon retour, explorateur ! Prêt à continuer ?",
@@ -112,5 +117,17 @@
         "total_points": "Points Totaux",
         "words_played": "Mots Joués",
         "global_top_10": "Top 10 Global"
+    },
+    "ai": {
+        "thinking": [
+            "Laisse-moi réfléchir...",
+            "Hmm...",
+            "C'est difficile..."
+        ],
+        "reaction_beaten": [
+            "Bien joué, {{player}} !",
+            "Tu m'as battu, {{player}} !",
+            "Wow, {{player}}, joli coup !"
+        ]
     }
 }

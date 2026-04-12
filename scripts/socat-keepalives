@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+KUBECTL="/snap/bin/kubectl"
+SOCAT="sudo socat"
+NAMESPACE="wordwank"
+INGRESS_NAME="ingress"
+
+echo "Starting Minikube Ingress Proxy Monitor..."
+
+while true; do
+    echo "Waiting for Ingress IP in namespace '$NAMESPACE' ..."
+    INGRESS_IP=$( $KUBECTL get ingress -n "$NAMESPACE" "$INGRESS_NAME" -o jsonpath='{.status.loadBalancer.ingress[0].ip}' || true )
+
+    if [[ -z "${INGRESS_IP}" ]] ; then
+        echo "Failed to fetch an ingress IP"
+	sleep 2
+	continue
+    fi
+
+
+    echo "Ingress IP detected: $INGRESS_IP. Initializing proxies ..."
+
+    $SOCAT TCP4-LISTEN:80,fork,reuseaddr TCP4:"$INGRESS_IP":80 &
+    PID_80=$!
+
+    $SOCAT TCP4-LISTEN:443,fork,reuseaddr TCP4:"$INGRESS_IP":443 &
+    PID_443=$!
+
+    $SOCAT TCP4-LISTEN:8888,fork,reuseaddr TCP4:"$INGRESS_IP":8888 &
+    PID_8888=$!
+
+    echo "Proxies active (PIDs: $PID_80, $PID_443, $PID_8888). Monitoring ..."
+
+    wait -n || true
+
+    echo "A proxy exited. Cleaning up and restarting..."
+    kill $PID_80 $PID_443 $PID_8888 2>/dev/null || true
+    sleep 2
+done
