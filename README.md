@@ -16,10 +16,9 @@ Wordwank is a polyglot microservices platform built as an exercise in modern dev
 Before embarking on your descent into the word-void, ensure your host (e.g., Ubuntu) has the following tools installed:
 
 - **Docker**: For building and running containers.
-- **Minikube**: Our local Kubernetes sanctuary.
+- **Kind**: Our local Kubernetes environment.
 - **kubectl**: The command-line interface for our cluster.
 - **Helm**: To manage our eldritch charts.
-- **socat**: Required for bridging the cluster to your local network.
 - **hunspell** & **hunspell-tools**: For generating application lexicons with full affix expansion.
 - **hunspell-{lang}**: Dictionaries for your desired languages (e.g., `hunspell-en-us`, `hunspell-de-de`, etc.).
 
@@ -28,14 +27,14 @@ Before embarking on your descent into the word-void, ensure your host (e.g., Ubu
 ```bash
 # Install core tools
 sudo apt update
-sudo apt install -y docker.io kubectl helm socat hunspell hunspell-tools hunspell-en-us hunspell-de-de hunspell-es hunspell-fr hunspell-ru
+sudo apt install -y docker.io kubectl helm hunspell hunspell-tools hunspell-en-us hunspell-de-de hunspell-es hunspell-fr hunspell-ru
 
-# Install Minikube
-curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-sudo install minikube-linux-amd64 /usr/local/bin/minikube
+# Install Kind
+# See https://kind.sigs.k8s.io/docs/user/quick-start/#installation for latest
+go install sigs.k8s.io/kind@latest
+# or via binary release:
+# curl -Lo ./kind https://kind.sigs.k8s.io/dl/latest/kind-linux-amd64 && chmod +x ./kind && sudo mv ./kind /usr/local/bin/kind
 ```
-
-Alternatively, minikube is available as a snap package, but you're likely better off just blindly running that binary you curled above.
 
 ---
 
@@ -43,75 +42,67 @@ Alternatively, minikube is available as a snap package, but you're likely better
 
 ### 1. Initialize the Universe
 
-Start Minikube and prepare the base addons (Registry, Ingress, and MetalLB):
+Before deploying, ensure you have a running Kubernetes cluster and a local Docker registry.
+
+We manage the local environment in a separate repository: **k8s-homelab**.
+You can start the cluster from that repository:
 
 ```bash
-minikube start --driver=docker --cpus 4 --memory 8192
-make minikube-setup
+# In the k8s-homelab directory
+make up
 ```
 
-### 2. Configure Networking
+This single command:
+- Starts a local Docker registry on `localhost:5000`
+- Creates a Kind cluster (default: `homelab`) with ports 80/443 mapped to your host
+- Connects the registry to the Kind network
+- Deploys the nginx ingress controller
 
-MetalLB needs a pool of IPs to hand out to our services. Our Makefile automates this by detecting your Minikube network:
+### 2. Build & Deploy
 
-```bash
-# Install the MetalLB manifests
-make metallb-install
-
-# Configure the IP pool
-make metallb-config
-```
-
-*I've always struggled to get Ingress just right to better mirror production on my development environment. MetalLB and a little `socat` tunnel to the Ingress controller were the missing pieces.*
-
-### 3. Build & Deploy
-
-This will build all polyglot services, push them to the local Minikube registry, and deploy the umbrella Helm chart:
+Build all polyglot services, push them to the local registry, and deploy the umbrella Helm chart:
 
 ```bash
 make build && make deploy && watch kubectl -n wordwank get pods
 ```
 
-**Persistent Storage**: The deployment automatically creates a persistent storage directory at `$HOME/.local/share/k8s-volumes/wordwank/` for PostgreSQL data using `install -m 775 -g root`. This ensures your database survives pod restarts and redeployments.
+**Persistent Storage**: PostgreSQL uses Kind's built-in `local-path` provisioner via the `standard` StorageClass. Data survives pod restarts and helm upgrades but is scoped to the Kind cluster — deleting the cluster (`make down` in k8s-homelab) wipes all data.
 
-To reset the database completely:
+To reset the database without destroying the cluster:
 
 ```bash
-sudo rm -rf $HOME/.local/share/k8s-volumes/wordwank
+kubectl -n wordwank delete pvc --all
 make deploy
 ```
 
-### 4. Expose to the Outer World
+### 3. Access the Game
 
-To access the game from another machine on your home network:
-
-1. **Update Hosts**: On your client machine, add an entry for the host name you've configured in `values.yaml`, so replace the hostname call below if necessary:
+With Kind's `extraPortMappings`, the ingress controller binds directly to your host's ports 80 and 443. Add a hosts entry on your client machine:
 
 ```bash
-echo "$( minikube ip ) $( hostname )" | sudo tee -a /etc/hosts
+echo "127.0.0.1 wordwank.fazigu.org" | sudo tee -a /etc/hosts
 ```
 
-2.**Start the Bridge**: In a separate terminal/tab (as this needs to stay open for as long as you want to access the game), run the following to proxy HTTP (port 80) and HTTPS (port 443) traffic to the Ingress:
+Then navigate to `http://wordwank.fazigu.org` to play.
+
+### 4. Setup SSL Certificates (Optional)
+
+For production or if you want trusted HTTPS locally, apply the Let's Encrypt ClusterIssuer:
 
 ```bash
-make expose
+# Install cert-manager
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.2/cert-manager.yaml
+
+# Wait for it
+kubectl wait --namespace cert-manager --for=condition=ready pod --selector=app.kubernetes.io/instance=cert-manager --timeout=180s
+
+# Apply the issuers
+kubectl apply -f helm/resources/production/letsencrypt-issuer.yaml
 ```
 
-### 5. Setup SSL Certificates (Optional but Recommended)
+*Note: Your domain must be publicly accessible on port 80 for HTTP-01 validation to succeed.*
 
-Install cert-manager and configure Let's Encrypt for automatic SSL certificates:
-
-**Important**: First edit `helm/resources/letsencrypt-issuer.yaml` and replace the email addresses with your actual email. This email will be used for Let's Encrypt certificate expiry notifications. You can use `make cert-manager-setup` to do this automatically.
-
-```bash
-make cert-manager-setup
-```
-
-This will install cert-manager and apply a NAT workaround (hostAliases patch) that allows cert-manager to perform self-checks in your local Minikube environment. The certificate should be issued within 1-2 minutes.
-
-*Note: The setup uses Let's Encrypt production by default. Your domain must be publicly accessible on port 80 for HTTP-01 validation to succeed.*
-
-### 6. External Services Setup
+### 5. External Services Setup
 
 Wordwank integrates with several external services for authentication, notifications, and payments. Follow these steps to generate the required credentials:
 
@@ -143,13 +134,13 @@ Wordwank integrates with several external services for authentication, notificat
 2. Note your **Ko-fi Page ID** (e.g., if your link is `ko-fi.com/wordwank`, your ID is `wordwank`).
 3. Set `VITE_KOFI_ID` in your frontend `.env` file or environment variables.
 
-### 7. PLAYTIME
+### 6. PLAYTIME
 
 Navigate to `https://wordwank.fazigu.org` (or `http://` if you skipped SSL setup) to begin.
 
 *My heathen prayers reach out to you, hoping that it works the first time. It took me so long to get comfortable with hooking my development environment up to the outside world in a way that didn't seem hacky and better mirrored the production environment, but I think this finally gets it right. Over the five years at my last job, nobody there seemed to care or wanted to brainstorm/troubleshoot the issue. I wish I'd had Antigravity back then.*
 
-### 8. Lexicons
+### 7. Lexicons
 
 Wordwank uses high-speed, pre-compiled lexicons for word validation. If you want to update the word lists from the latest Hunspell dictionaries:
 
@@ -163,6 +154,15 @@ You can customize the source and destination paths if your system stores diction
 
 ```bash
 make lexicons HUNSPELL_DICTS=/path/to/dicts WORDD_ROOT=srv/wordd/share/words
+```
+
+### 8. Teardown
+
+To destroy the Kind cluster and local registry, run this command in the **k8s-homelab** repository:
+
+```bash
+# In the k8s-homelab directory
+make down
 ```
 
 ---

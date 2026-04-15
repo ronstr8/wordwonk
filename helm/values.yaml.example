@@ -14,11 +14,7 @@ global:
   paypalEnabled: false
   paypalEmail: "quinnfazigu@gmail.com"
 
-# Persistent storage configuration
-persistence:
-  enabled: true
-  hostBasePath: /home/user/.local/share/minikube-data  # Overridden by Makefile with $HOME
-  size: 10Gi
+
 
 # Centralized Ingress configuration
 ingress:
@@ -66,5 +62,5 @@ postgresql:
   primary:
     persistence:
       enabled: true
-      storageClass: postgresql-local
+      storageClass: standard
       size: 10Gi
