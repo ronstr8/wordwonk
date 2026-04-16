@@ -10,7 +10,7 @@ DOMAIN = wordwank.fazigu.org
 
 SERVICES = frontend backend wordd ollama
 
-.PHONY: all build clean deploy undeploy help $(SERVICES)
+.PHONY: all build clean deploy undeploy help backup $(SERVICES)
 
 all: build
 
@@ -50,6 +50,9 @@ ollama:
 
 migrate: ## Run pending database migrations inside the cluster
 	kubectl exec -n $(NAMESPACE) -it deploy/backend -- perl -Ilib bin/migrate.pl
+
+backup: ## Create a timestamped SQL backup of the wordwank database
+	bash scripts/backup-db.sh
 
 
 # Helm Commands

@@ -32,117 +32,39 @@ fn init_logging(log_file: Option<&String>) {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let matches = Command::new("wordd")
-        .version("1.3")
+        .version("1.14.0")
         .author("Ron Straight <straightre@gmail.com>")
         .about("Polyglot word validity and lookup service")
-
-        .arg(
-            Arg::new("listen-host")
-                .long("listen-host")
-                .num_args(1)
-                .default_value("0.0.0.0:2345")
-                .help("Specify the listen address (e.g., 0.0.0.0:2345)"),
-        )
-        .arg(
-            Arg::new("log-file")
-                .long("log-file")
-                .num_args(1)
-                .help("Specify a log file path (if omitted, logs to stderr)"),
-        )
-        .arg(
-            Arg::new("share-dir")
-                .long("share-dir")
-                .num_args(1)
-                .default_value("./share")
-                .help("Directory containing the word files"),
-        )
-        .arg(
-            Arg::new("langs")
-                .long("langs")
-                .num_args(1)
-                .default_value("en,es,fr")
-                .help("Comma-separated list of languages to support"),
-        )
-        .arg(
-            Arg::new("total-tiles")
-                .long("total-tiles")
-                .num_args(1)
-                .default_value("100")
-                .help("Total size of the tile bag (including 2 blanks)"),
-        )
-        .arg(
-            Arg::new("rack-size")
-                .long("rack-size")
-                .env("DEFAULT_RANDOM_WORD_LETTER_COUNT")
-                .num_args(1)
-                .default_value("7")
-                .help("Maximum word length (rack size)"),
-        )
+        .arg(Arg::new("listen-host").long("listen-host").num_args(1).default_value("0.0.0.0:2345"))
+        .arg(Arg::new("log-file").long("log-file").num_args(1))
+        .arg(Arg::new("share-dir").long("share-dir").num_args(1).default_value("./share"))
+        .arg(Arg::new("langs").long("langs").num_args(1).default_value("en,es,fr"))
+        .arg(Arg::new("total-tiles").long("total-tiles").num_args(1).default_value("100"))
+        .arg(Arg::new("rack-size").long("rack-size").env("DEFAULT_RANDOM_WORD_LETTER_COUNT").num_args(1).default_value("7"))
         .get_matches();
 
-
-    let listen_host = matches
-        .get_one::<String>("listen-host")
-        .expect("listen-host argument must always have a default value")
-        .clone();
     let log_file = matches.get_one::<String>("log-file");
-    let share_dir = matches.get_one::<String>("share-dir").unwrap();
-    let langs_str = matches.get_one::<String>("langs").unwrap();
-    let total_tiles = matches
-        .get_one::<String>("total-tiles")
-        .unwrap()
-        .parse::<usize>()
-        .unwrap_or(100);
-    let rack_size = matches
-        .get_one::<String>("rack-size")
-        .unwrap()
-        .parse::<usize>()
-        .unwrap_or(7);
-
     init_logging(log_file);
 
-    let mut word_lists = HashMap::new();
-    let mut supported_langs = Vec::new();
-    let mut tile_bags = HashMap::new();
-    let mut vowel_sets = HashMap::new();
-    let mut consonant_sets = HashMap::new();
-    let mut unicorn_sets = HashMap::new();
+    let share_dir = matches.get_one::<String>("share-dir").map(|s| s.as_str()).unwrap_or("./share");
+    let langs_str = matches.get_one::<String>("langs").map(|s| s.as_str()).unwrap_or("en");
+    
+    let total_tiles = matches.get_one::<String>("total-tiles")
+        .and_then(|s| s.parse::<usize>().ok())
+        .unwrap_or(100);
+        
+    let rack_size = matches.get_one::<String>("rack-size")
+        .and_then(|s| s.parse::<usize>().ok())
+        .unwrap_or(7);
 
-    for lang in langs_str.split(',') {
-        let lang = lang.trim().to_lowercase();
-        info!("Loading word list for language: {} (max_len: {})", lang, rack_size);
-        let words = word_loader::load_filtered_words(share_dir, &lang, rack_size);
-        
-        // Calculate letter distribution directly from the filtered in-memory set
-        let freq = distribution::calculate_distribution_from_set(&words);
-        info!("Calculated letter distribution for {} ({} unique letters, from {} words)", lang, freq.len(), words.len());
-        
-        // Compute tile bag
-        let bag = distribution::compute_tile_bag(&freq, total_tiles);
-        info!("Computed tile bag for {} ({} total tiles)", lang, bag.values().sum::<usize>());
-        
-        // Classify letters
-        let (vowels, consonants, unicorns) = letter_classifier::classify_letters(&freq, &lang);
-        info!("Classified letters for {}: {} vowels, {} consonants, {} unicorns", 
-              lang, vowels.len(), consonants.len(), unicorns.len());
-        
-        // Store all pre-computed data
-        word_lists.insert(lang.clone(), words);
-        supported_langs.push(lang.clone());
-        tile_bags.insert(lang.clone(), bag);
-        vowel_sets.insert(lang.clone(), vowels);
-        consonant_sets.insert(lang.clone(), consonants);
-        unicorn_sets.insert(lang.clone(), unicorns);
-    }
+    let listen_host = matches.get_one::<String>("listen-host")
+        .cloned()
+        .unwrap_or_else(|| "0.0.0.0:2345".to_string());
 
-    let state = AppState {
-        word_lists,
-        supported_langs,
-        tile_bags,
-        vowel_sets,
-        consonant_sets,
-        unicorn_sets,
-    };
+    info!("Starting wordd on {} with share-dir: {}", listen_host, share_dir);
+
+    // Bootstrap application state
+    let state = bootstrap_state(share_dir, langs_str, total_tiles, rack_size);
     let shared_state = web::Data::new(state);
 
     HttpServer::new(move || {
@@ -163,4 +85,43 @@ async fn main() -> std::io::Result<()> {
     .bind(&listen_host)?
     .run()
     .await
+}
+
+fn bootstrap_state(share_dir: &str, langs_str: &str, total_tiles: usize, rack_size: usize) -> AppState {
+    let mut word_lists = HashMap::new();
+    let mut supported_langs = Vec::new();
+    let mut tile_bags = HashMap::new();
+    let mut vowel_sets = HashMap::new();
+    let mut consonant_sets = HashMap::new();
+    let mut unicorn_sets = HashMap::new();
+
+    for lang in langs_str.split(',') {
+        let lang = lang.trim().to_lowercase();
+        if lang.is_empty() { continue; }
+
+        info!("Loading language: {} (rack_size: {})", lang, rack_size);
+        let words = word_loader::load_filtered_words(share_dir, &lang, rack_size);
+        
+        // Calculate distribution and components
+        let freq = distribution::calculate_distribution_from_set(&words);
+        let bag = distribution::compute_tile_bag(&freq, total_tiles);
+        let (vowels, consonants, unicorns) = letter_classifier::classify_letters(&freq, &lang);
+        
+        // Store pre-computed metrics
+        word_lists.insert(lang.clone(), words);
+        supported_langs.push(lang.clone());
+        tile_bags.insert(lang.clone(), bag);
+        vowel_sets.insert(lang.clone(), vowels);
+        consonant_sets.insert(lang.clone(), consonants);
+        unicorn_sets.insert(lang.clone(), unicorns);
+    }
+
+    AppState {
+        word_lists,
+        supported_langs,
+        tile_bags,
+        vowel_sets,
+        consonant_sets,
+        unicorn_sets,
+    }
 }

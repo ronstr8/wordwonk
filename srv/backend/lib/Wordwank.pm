@@ -54,7 +54,12 @@ has wordd => sub ($self) {
 };
 has state_processor => sub ($self) { 
     require Wordwank::Game::StateProcessor;
-    Wordwank::Game::StateProcessor->new(app => $self) 
+    Wordwank::Game::StateProcessor->new(
+        app                 => $self,
+        quick_bonus_seconds => $self->config->{quick_bonus_seconds} // $ENV{QUICK_BONUS_SECONDS} // 5,
+        unique_word_bonus   => $self->config->{unique_word_bonus}   // $ENV{UNIQUE_WORD_BONUS}   // 1,
+        score_against_ai    => $self->config->{score_against_ai}    // $ENV{SCORE_AGAINST_AI}    // 'true',
+    ) 
 };
 has game_registry => sub ($self) { 
     require Wordwank::Game::Registry;

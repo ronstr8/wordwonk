@@ -1,0 +1,17 @@
+{{- if .Values.global.persistence.manualPV -}}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: wordwank-db-pv
+spec:
+  capacity:
+    storage: {{ .Values.postgresql.primary.persistence.size | default "10Gi" }}
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: {{ .Values.global.storageClass | default "wordwank-db-local" }}
+  hostPath:
+    path: /mnt/moor-storage/wordwank-db
+    type: DirectoryOrCreate
+{{- end -}}

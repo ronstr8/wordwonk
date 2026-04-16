@@ -4,11 +4,14 @@ use v5.36;
 use utf8;
 
 has 'app' => ( is => 'ro', required => 1 );
+has 'quick_bonus_seconds' => ( is => 'ro', default => sub { $ENV{QUICK_BONUS_SECONDS} || 5 } );
+has 'unique_word_bonus'   => ( is => 'ro', default => sub { defined $ENV{UNIQUE_WORD_BONUS} ? $ENV{UNIQUE_WORD_BONUS} : 1 } );
+has 'score_against_ai'     => ( is => 'ro', default => sub { $ENV{SCORE_AGAINST_AI} // 'true' } );
 
 sub calculate_results ($self, $plays, $game_lang, $game_started_at = undef, $rack_size = 8) {
     my $scorer = $self->app->scorer;
-    my $quick_bonus_seconds = $ENV{QUICK_BONUS_SECONDS} || 5;
-    my $unique_word_bonus = defined $ENV{UNIQUE_WORD_BONUS} ? $ENV{UNIQUE_WORD_BONUS} : 1;
+    my $quick_bonus_seconds = $self->quick_bonus_seconds;
+    my $unique_word_bonus = $self->unique_word_bonus;
     
     my %word_to_players;
     my %player_bonuses;  # player_id -> { duplicates => count, length_bonus => count, unique => count, quick_bonus => count, duped_by => [ { name => nickname, bonus => 1 } ] }
@@ -123,15 +126,21 @@ sub calculate_results ($self, $plays, $game_lang, $game_started_at = undef, $rac
 }
 
 sub is_solo ($self, $plays, $ai_player_ids = []) {
-    my %is_ai = map { $_ => 1 } @$ai_player_ids;
+    my $score_against_ai = $self->score_against_ai;
     my %seen_players = map { $_->get_column('player_id') => 1 } @$plays;
-    
-    my $humans_seen = 0;
-    for my $pid (keys %seen_players) {
-        $humans_seen++ unless $is_ai{$pid};
+
+    if ($score_against_ai eq 'true') {
+        # Consider all participants (human or AI) who made a play
+        return scalar(keys %seen_players) < 2;
+    } else {
+        # Original logic: only count humans
+        my %is_ai = map { $_ => 1 } @$ai_player_ids;
+        my $humans_seen = 0;
+        for my $pid (keys %seen_players) {
+            $humans_seen++ unless $is_ai{$pid};
+        }
+        return $humans_seen < 2;
     }
-    
-    return $humans_seen < 2;
 }
 
 1;

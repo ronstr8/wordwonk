@@ -5,6 +5,38 @@ All notable changes to Wordwank will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.14.0] - 2026-04-16
+
+### Changed (1.14.0)
+
+- **Frontend Architecture Overhaul**: Refactored the monolithic `App.jsx` (~1150 lines) into a modular, hook-based architecture, reducing primary component size by 70%.
+- **Custom Hooks Ecosystem**: Introduced specialized hooks (`usePlayerAuth`, `useGameState`, `useGameSocket`, `useGameController`, `useInteractionHandler`) to cleanly separate network I/O, game state, and user interaction logic.
+- **Component Decomposition**: Extracted `GameHeader` and `GameArea` into dedicated, reusable components to improve UI maintainability.
+- **Backend Configuration Hardening**: Refactored `Wordwank::Game::StateProcessor` to utilize Moose attributes for scoring rules, enabling dependency injection and decoupling critical game logic from environment variables.
+- **Rust Service Modularization**: Extracted state bootstrapping in the `wordd` service into dedicated functions, cleaning up `main.rs` and improving startup orchestration.
+
+### Fixed (1.14.0)
+
+- **Service Robustness**: Replaced panic-prone `unwrap()` calls in the Rust word service with graceful error handling, ensuring informative failures if word lists are missing or misconfigured.
+- **Config Syntax**: Hardened `StateProcessor` attribute defaults in Perl to use safer defined-or (`//`) checks.
+
+## [1.13.0] - 2026-04-16
+
+### Added (1.13.0)
+
+- **Cloud Portability**: Helm chart now supports both local homelab (manual PV) and cloud provider storage via `global.storageClass` and `global.persistence.manualPV` toggles.
+- **Automated Backups**: Implemented `make backup` and secure `scripts/backup-db.sh` using Kubernetes secrets for dynamic credential fetching.
+- **AI Competitive Scoring**: AI opponents now count toward leaderboard eligibility, allowing solo players to progress against the system (controllable via `global.scoreAgainstAI`).
+- **Configurable Logic**: Added `global.scoreAgainstAI` toggle to `values.yaml` to switch between relaxed (AI counts) and strict (2 humans required) scoring.
+
+### Fixed (1.13.0)
+
+- **Volume Permissions**: Switched to `busybox:latest` for volume permission init containers to resolve image pull failures in restricted environments.
+- **Database Restoration**: Successfully recovered 1,000+ historical game plays and player accounts from legacy SQL backups.
+- **Standardized Bonuses**: Standardized the `uniqueWordBonus` default value to **+1 point**.
+
+## [1.12.0] - 2026-04-15 (Silent Bump)
+
 ## [1.10.1] - 2026-03-07
 
 ### Added (1.10.1)

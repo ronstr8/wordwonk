@@ -94,6 +94,8 @@ spec:
               value: {{ .Values.ollama.model | default "phi3:mini" | quote }}
             - name: END_ON_ALL_PLAYED
               value: {{ .Values.global.endOnAllPlayed | default "false" | quote }}
+            - name: SCORE_AGAINST_AI
+              value: {{ .Values.global.scoreAgainstAI | default "false" | quote }}
 
           volumeMounts:
             - name: locales-volume

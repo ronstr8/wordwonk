@@ -5,7 +5,7 @@ global:
   externalPort: 80
   registry: localhost:5000
   namespace: wordwank
-  imageTag: latest
+  imageTag: 1.14.0
   imagePullPolicy: Always
   maxPlayers: 13
   randomLetterScoreMode: "true"
@@ -24,7 +24,11 @@ global:
   paypalEnabled: false
   paypalEmail: "quinnfazigu@gmail.com"
   projectCodeLink: "https://github.com/ronstr8/wordwank"
+  scoreAgainstAI: "true"
   endOnAllPlayed: "true"
+  storageClass: "wordwank-db-local"
+  persistence:
+    manualPV: true
 
 
 # Centralized Ingress configuration
@@ -87,8 +91,12 @@ postgresql:
       scriptsConfigMap: db-init
     persistence:
       enabled: true
-      storageClass: standard
       size: 10Gi
+  volumePermissions:
+    enabled: true
+    image:
+      repository: busybox
+      tag: latest
 
 ollama:
   enabled: true
