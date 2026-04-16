@@ -10,7 +10,7 @@ export default function useInteractionHandler({
         rack, setRack, rackRef,
         guess, setGuess, guessRef,
         isLocked, timeLeft,
-        setBlankChoice
+        setBlankChoice, results
     } = state;
 
     const returnToRack = useCallback((slotIndex) => {
@@ -99,7 +99,7 @@ export default function useInteractionHandler({
 
     const handleGlobalKeyDown = useCallback((e) => {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable || e.target.closest('.chat-input-area')) return;
-        if (isLocked || timeLeft === 0 || state.results) return;
+        if (isLocked || timeLeft === 0 || results) return;
 
         if (e.key === 'Backspace') { e.preventDefault(); returnToRack(); }
         else if (e.key === 'Enter') { e.preventDefault(); submitWord(); }
@@ -119,7 +119,7 @@ export default function useInteractionHandler({
                 } else play('buzzer');
             }
         }
-    }, [isLocked, timeLeft, state.results, returnToRack, submitWord, moveTileToGuess, playTile, play, rackRef, guessRef]);
+    }, [isLocked, timeLeft, results, returnToRack, submitWord, moveTileToGuess, playTile, play, rackRef, guessRef]);
 
     useEffect(() => {
         window.addEventListener('keydown', handleGlobalKeyDown);

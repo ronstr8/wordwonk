@@ -24,6 +24,19 @@ export default function useGameSocket({
         playerIdRef.current = playerId;
     }, [playerId]);
 
+    const handlersRef = useRef({});
+    useEffect(() => {
+        handlersRef.current = {
+            onChatMessage, onGameStart, onTimer, onPlay,
+            onPlayerJoined, onPlayerQuit, onError, onGameEnd,
+            onIdentity, onChatHistory
+        };
+    }, [
+        onChatMessage, onGameStart, onTimer, onPlay,
+        onPlayerJoined, onPlayerQuit, onError, onGameEnd,
+        onIdentity, onChatHistory
+    ]);
+
     const connect = useCallback(() => {
         if (!playerId) return;
         
@@ -69,17 +82,18 @@ export default function useGameSocket({
             socket.onmessage = (event) => {
                 try {
                     const data = JSON.parse(event.data);
+                    const handlers = handlersRef.current;
                     switch (data.type) {
-                        case 'chat': onChatMessage?.(data); break;
-                        case 'chat_history': onChatHistory?.(data); break;
-                        case 'identity': onIdentity?.(data); break;
-                        case 'game_start': onGameStart?.(data); break;
-                        case 'timer': onTimer?.(data); break;
-                        case 'play': onPlay?.(data); break;
-                        case 'player_joined': onPlayerJoined?.(data); break;
-                        case 'player_quit': onPlayerQuit?.(data); break;
-                        case 'error': onError?.(data); break;
-                        case 'game_end': onGameEnd?.(data); break;
+                        case 'chat': handlers.onChatMessage?.(data); break;
+                        case 'chat_history': handlers.onChatHistory?.(data); break;
+                        case 'identity': handlers.onIdentity?.(data); break;
+                        case 'game_start': handlers.onGameStart?.(data); break;
+                        case 'timer': handlers.onTimer?.(data); break;
+                        case 'play': handlers.onPlay?.(data); break;
+                        case 'player_joined': handlers.onPlayerJoined?.(data); break;
+                        case 'player_quit': handlers.onPlayerQuit?.(data); break;
+                        case 'error': handlers.onError?.(data); break;
+                        case 'game_end': handlers.onGameEnd?.(data); break;
                         default: console.warn('[WS] Unknown message type:', data.type);
                     }
                 } catch (err) {
@@ -102,7 +116,7 @@ export default function useGameSocket({
             if (socket) socket.close();
             if (reconnectTimeout) clearTimeout(reconnectTimeout);
         };
-    }, [playerId, onChatMessage, onGameStart, onTimer, onPlay, onPlayerJoined, onPlayerQuit, onError, onGameEnd, onIdentity, onChatHistory]);
+    }, [playerId]); // Only depend on playerId
 
     useEffect(() => {
         const cleanup = connect();
