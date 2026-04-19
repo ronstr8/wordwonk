@@ -1,12 +1,12 @@
-# Wordwonk Polyglot Stack Makefile
+# wordwonk Polyglot Stack Makefile
 
 # Localhost is always allowed as an insecure registry by Docker
 REGISTRY = localhost:5000
 # Single point of truth for versions is helm/values.yaml
 TAG ?= $(shell grep -m 1 "imageTag:" helm/values.yaml | sed 's/.*imageTag:[[:space:]]*//' | tr -d ' "')
 DOCKER_BUILD_FLAGS ?= --progress=plain
-NAMESPACE = Wordwonk
-DOMAIN = Wordwonk.fazigu.org
+NAMESPACE = wordwonk
+DOMAIN = wordwonk.fazigu.org
 
 SERVICES = frontend backend wordd ollama
 
@@ -15,7 +15,7 @@ SERVICES = frontend backend wordd ollama
 all: build
 
 help:
-	@echo "Wordwonk Build System (Kind)"
+	@echo "wordwonk Build System (Kind)"
 	@echo "Usage:"
 	@echo "  make build              - Build and push all microservice Docker images"
 	@echo "  make deploy             - Install/Upgrade using Helm umbrella chart"
@@ -25,46 +25,46 @@ help:
 build: $(SERVICES)
 
 frontend:
-	docker build $(DOCKER_BUILD_FLAGS) -t $(REGISTRY)/Wordwonk-frontend:$(TAG) ./srv/frontend
-	docker push $(REGISTRY)/Wordwonk-frontend:$(TAG)
+	docker build $(DOCKER_BUILD_FLAGS) -t $(REGISTRY)/wordwonk-frontend:$(TAG) ./srv/frontend
+	docker push $(REGISTRY)/wordwonk-frontend:$(TAG)
 	kubectl rollout restart deployment/frontend -n $(NAMESPACE) || true
 	kubectl rollout status deployment/frontend -n $(NAMESPACE) || true
 
 wordd:
-	docker build $(DOCKER_BUILD_FLAGS) -t $(REGISTRY)/Wordwonk-wordd:$(TAG) ./srv/wordd
-	docker push $(REGISTRY)/Wordwonk-wordd:$(TAG)
+	docker build $(DOCKER_BUILD_FLAGS) -t $(REGISTRY)/wordwonk-wordd:$(TAG) ./srv/wordd
+	docker push $(REGISTRY)/wordwonk-wordd:$(TAG)
 	kubectl rollout restart deployment/wordd -n $(NAMESPACE) || true
 	kubectl rollout status deployment/wordd -n $(NAMESPACE) || true
 
 backend:
-	docker build $(DOCKER_BUILD_FLAGS) -t $(REGISTRY)/Wordwonk-backend:$(TAG) ./srv/backend
-	docker push $(REGISTRY)/Wordwonk-backend:$(TAG)
+	docker build $(DOCKER_BUILD_FLAGS) -t $(REGISTRY)/wordwonk-backend:$(TAG) ./srv/backend
+	docker push $(REGISTRY)/wordwonk-backend:$(TAG)
 	kubectl rollout restart deployment/backend -n $(NAMESPACE) || true
 	kubectl rollout status deployment/backend -n $(NAMESPACE) || true
 
 ollama:
-	docker build $(DOCKER_BUILD_FLAGS) -t $(REGISTRY)/Wordwonk-ollama:$(TAG) ./srv/ollama
-	docker push $(REGISTRY)/Wordwonk-ollama:$(TAG)
+	docker build $(DOCKER_BUILD_FLAGS) -t $(REGISTRY)/wordwonk-ollama:$(TAG) ./srv/ollama
+	docker push $(REGISTRY)/wordwonk-ollama:$(TAG)
 	kubectl rollout restart deployment/ollama -n $(NAMESPACE) || true
 	kubectl rollout status deployment/ollama -n $(NAMESPACE) || true
 
 migrate: ## Run pending database migrations inside the cluster
 	kubectl exec -n $(NAMESPACE) -it deploy/backend -- perl -Ilib bin/migrate.pl
 
-backup: ## Create a timestamped SQL backup of the Wordwonk database
+backup: ## Create a timestamped SQL backup of the wordwonk database
 	bash scripts/backup-db.sh
 
 
 # Helm Commands
 # i18n Note: Master truth lives in helm/share/locale/
-# Both frontend and backend mount the Wordwonk-locales ConfigMap.
+# Both frontend and backend mount the wordwonk-locales ConfigMap.
 
 deploy:
 	node scripts/sync-version.js
 	@mkdir -p helm/share/locale
 	helm dependency update ./helm
-	kubectl delete configmap Wordwonk-locales --namespace $(NAMESPACE) --ignore-not-found
-	helm upgrade --install Wordwonk ./helm \
+	kubectl delete configmap wordwonk-locales --namespace $(NAMESPACE) --ignore-not-found
+	helm upgrade --install wordwonk ./helm \
 		--namespace $(NAMESPACE) \
 		--create-namespace \
 		--values ./helm/values.yaml \
@@ -73,13 +73,13 @@ deploy:
 		--set global.domain=$(DOMAIN)
 
 undeploy:
-	helm uninstall Wordwonk --namespace $(NAMESPACE)
+	helm uninstall wordwonk --namespace $(NAMESPACE)
 
 # Hot-reload i18n via ConfigMap
 locales:
 	@echo "Updating shared locales ConfigMap..."
-	@kubectl delete configmap Wordwonk-locales --namespace $(NAMESPACE) --ignore-not-found
-	@kubectl create configmap Wordwonk-locales \
+	@kubectl delete configmap wordwonk-locales --namespace $(NAMESPACE) --ignore-not-found
+	@kubectl create configmap wordwonk-locales \
 		--namespace $(NAMESPACE) \
 		--from-file=en.json=helm/share/locale/en.json \
 		--from-file=es.json=helm/share/locale/es.json \

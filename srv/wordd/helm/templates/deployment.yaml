@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: wordd
-          image: "{{ .Values.global.registry }}/Wordwonk-wordd:{{ .Values.imageTag | default .Values.global.imageTag }}"
+          image: "{{ .Values.global.registry }}/wordwonk-wordd:{{ .Values.imageTag | default .Values.global.imageTag }}"
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           ports:
             - containerPort: 2345

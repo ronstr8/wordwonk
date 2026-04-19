@@ -8,6 +8,6 @@ service:
   port: 2345
 
 global:
-  namespace: Wordwonk
-  registry: docker.io/Wordwonk
+  namespace: wordwonk
+  registry: docker.io/wordwonk
 

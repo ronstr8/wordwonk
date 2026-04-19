@@ -1,6 +1,6 @@
 replicaCount: 1
 image:
-  repository: localhost:5000/Wordwonk-backend
+  repository: localhost:5000/wordwonk-backend
   pullPolicy: Always
   tag: "0.23.0"
   logLevel: debug
@@ -9,6 +9,5 @@ service:
   type: ClusterIP
   port: 3000
 database:
-  url: "dbi:Pg:dbname=Wordwonk;host=postgresql"
+  url: "dbi:Pg:dbname=wordwank;host=postgresql"
   user: "postgres"
-
