@@ -4,7 +4,7 @@ This project wouldn't be possible without the excellent work of others. We're gr
 
 ## Dictionaries and Lexicons
 
-Wordwank's lexicons are primarily generated from [Hunspell](https://hunspell.github.io/) dictionaries. We are deeply grateful to the Hunspell project and the many contributors who maintain high-quality word lists for every language on Earth.
+Wordwonk's lexicons are primarily generated from [Hunspell](https://hunspell.github.io/) dictionaries. We are deeply grateful to the Hunspell project and the many contributors who maintain high-quality word lists for every language on Earth.
 
 ### Original Lexicon Sources
 
@@ -45,3 +45,4 @@ This project uses many excellent open source libraries. See `package.json`, `cpa
 ---
 
 **Want to add something to this list?** Contributions and corrections welcome!
+

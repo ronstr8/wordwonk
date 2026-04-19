@@ -37,11 +37,11 @@ sub get_test_mojo {
     # Mock out background tasks that might interfere with tests before app creation
     {
         no warnings 'redefine';
-        require Wordwank;
-        *Wordwank::prepopulate_games = sub { 1 };
+        require Wordwonk;
+        *Wordwonk::prepopulate_games = sub { 1 };
     }
 
-    $singleton_t = Test::Mojo->new('Wordwank');
+    $singleton_t = Test::Mojo->new('Wordwonk');
     
     # Deploy the schema to SQLite automatically from DBIx::Class Result classes
     eval {
@@ -165,21 +165,21 @@ sub wait_for_message {
 sub _apply_mocks {
     {
         no warnings 'redefine';
-        use Wordwank::Game::AI;
-        use Wordwank::Service::Wordd;
-        use Wordwank::Game::Scorer;
+        use Wordwonk::Game::AI;
+        use Wordwonk::Service::Wordd;
+        use Wordwonk::Game::Scorer;
         use Mojo::Message::Response;
 
         # AI mocks
-        *Wordwank::Game::AI::_request_candidates = sub { 
+        *Wordwonk::Game::AI::_request_candidates = sub { 
             my ($self, $url, $letters) = @_;
             $self->app->log->debug("AI " . $self->nickname . " MOCKED candidate fetch");
             return undef;
-        } unless defined &Wordwank::Game::AI::_request_candidates_MOCKED;
-        *Wordwank::Game::AI::_request_candidates_MOCKED = sub { 1 };
+        } unless defined &Wordwonk::Game::AI::_request_candidates_MOCKED;
+        *Wordwonk::Game::AI::_request_candidates_MOCKED = sub { 1 };
 
         # Wordd Service mocks (prevent actual network calls)
-        *Wordwank::Service::Wordd::validate = sub {
+        *Wordwonk::Service::Wordd::validate = sub {
             my ($self, $word, $lang, $cb) = @_;
             $self->app->log->debug("MOCKED Wordd::validate for '$word'");
             # Support testing invalid words via magic string
@@ -188,26 +188,26 @@ sub _apply_mocks {
                 valid => $valid,
                 definition => $valid ? "Mocked definition for $word" : undef,
             })));
-        } unless defined &Wordwank::Service::Wordd::validate_MOCKED;
-        *Wordwank::Service::Wordd::validate_MOCKED = sub { 1 };
+        } unless defined &Wordwonk::Service::Wordd::validate_MOCKED;
+        *Wordwonk::Service::Wordd::validate_MOCKED = sub { 1 };
 
-        *Wordwank::Service::Wordd::define = sub {
+        *Wordwonk::Service::Wordd::define = sub {
             my ($self, $word, $lang, $cb) = @_;
             $cb->(Mojo::Message::Response->new(code => 404));
-        } unless defined &Wordwank::Service::Wordd::define_MOCKED;
-        *Wordwank::Service::Wordd::define_MOCKED = sub { 1 };
+        } unless defined &Wordwonk::Service::Wordd::define_MOCKED;
+        *Wordwonk::Service::Wordd::define_MOCKED = sub { 1 };
 
-        *Wordwank::Service::Wordd::suggest = sub {
+        *Wordwonk::Service::Wordd::suggest = sub {
             my ($self, $letters, $lang, $cb) = @_;
             $cb->(Mojo::Message::Response->new(code => 404));
-        } unless defined &Wordwank::Service::Wordd::suggest_MOCKED;
-        *Wordwank::Service::Wordd::suggest_MOCKED = sub { 1 };
+        } unless defined &Wordwonk::Service::Wordd::suggest_MOCKED;
+        *Wordwonk::Service::Wordd::suggest_MOCKED = sub { 1 };
 
         # Scorer mocks
-        *Wordwank::Game::Scorer::_fetch_tile_config_from_service = sub {
+        *Wordwonk::Game::Scorer::_fetch_tile_config_from_service = sub {
             return { success => 0 };
-        } unless defined &Wordwank::Game::Scorer::_fetch_tile_config_from_service_MOCKED;
-        *Wordwank::Game::Scorer::_fetch_tile_config_from_service_MOCKED = sub { 1 };
+        } unless defined &Wordwonk::Game::Scorer::_fetch_tile_config_from_service_MOCKED;
+        *Wordwonk::Game::Scorer::_fetch_tile_config_from_service_MOCKED = sub { 1 };
     }
 }
 
@@ -229,3 +229,4 @@ sub cleanup_test_games {
 }
 
 1;
+

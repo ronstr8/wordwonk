@@ -1,4 +1,4 @@
-package Wordwank::Schema::Result::Game;
+package Wordwonk::Schema::Result::Game;
 use Moose;
 use MooseX::NonMoose;
 extends 'DBIx::Class::Core';
@@ -58,10 +58,11 @@ __PACKAGE__->inflate_column('rack', {
 });
 
 __PACKAGE__->has_many(
-    plays => 'Wordwank::Schema::Result::Play',
+    plays => 'Wordwonk::Schema::Result::Play',
     'game_id'
 );
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
 1;
+

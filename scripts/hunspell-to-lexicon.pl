@@ -8,7 +8,7 @@ use feature 'signatures';
 
 no warnings 'redefine';
 
-# hunspell_to_lexicon.pl - Convert Hunspell .dic files to Wordwank Lexicon format
+# hunspell_to_lexicon.pl - Convert Hunspell .dic files to Wordwonk Lexicon format
 # Usage: perl hunspell_to_lexicon.pl <filenames.dic> > <output_lexicon.txt>
 
 binmode STDOUT, ":utf8";
@@ -180,5 +180,6 @@ sub add_word ($word) {
 
     $WORDS{lc($word)}++;
 }
+
 
 

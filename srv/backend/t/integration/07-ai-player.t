@@ -47,7 +47,7 @@ sub setup_mock_wordd_ai {
             Mojo::IOLoop->next_tick(sub { $cb->($self, $tx) });
         };
         # MOCK RACK VALIDATION IN SCORER
-        *Wordwank::Game::Scorer::can_form_word = sub { return 1 };
+        *Wordwonk::Game::Scorer::can_form_word = sub { return 1 };
     }
     $t->app->ua($mock_ua);
 }
@@ -67,7 +67,7 @@ subtest 'AI Player Profiles and behavior' => sub {
     
     my $ai_name = 'Unknown';
     for my $name (@{$game_start->{players}}) {
-        if ($name =~ /Worm|QuickSilver|WankMaster|Scrabble/) {
+        if ($name =~ /Worm|QuickSilver|WONKMaster|Scrabble/) {
             $ai_name = $name;
             last;
         }
@@ -136,3 +136,4 @@ subtest 'AI Player Profiles and behavior' => sub {
 
 cleanup_test_games($t);
 done_testing();
+

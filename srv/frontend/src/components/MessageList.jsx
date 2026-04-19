@@ -35,7 +35,7 @@ const MessageList = ({ messages }) => {
     const getSystemIcon = (msg) => {
         if (msg.type === 'results' || msg.type === 'results_table') return '🏆';
         const text = msg.text || '';
-        if (text.includes('start wanking')) return '🏁';
+        if (text.includes('start playing')) return '🏁';
         if (text.includes('played a word')) return '📝';
         if (text.includes('won with') || text.includes('won the round')) return '🏆';
         return '🤖';

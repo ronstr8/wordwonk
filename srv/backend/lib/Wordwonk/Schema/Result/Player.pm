@@ -1,4 +1,4 @@
-package Wordwank::Schema::Result::Player;
+package Wordwonk::Schema::Result::Player;
 use Moose;
 use MooseX::NonMoose;
 extends 'DBIx::Class::Core';
@@ -62,22 +62,22 @@ __PACKAGE__->add_unique_constraint([qw/nickname/]);
 __PACKAGE__->add_unique_constraint([qw/email/]);
 
 __PACKAGE__->has_many(
-    plays => 'Wordwank::Schema::Result::Play',
+    plays => 'Wordwonk::Schema::Result::Play',
     'player_id'
 );
 
 __PACKAGE__->has_many(
-    identities => 'Wordwank::Schema::Result::PlayerIdentity',
+    identities => 'Wordwonk::Schema::Result::PlayerIdentity',
     'player_id'
 );
 
 __PACKAGE__->has_many(
-    passkeys => 'Wordwank::Schema::Result::PlayerPasskey',
+    passkeys => 'Wordwonk::Schema::Result::PlayerPasskey',
     'player_id'
 );
 
 __PACKAGE__->has_many(
-    sessions => 'Wordwank::Schema::Result::Session',
+    sessions => 'Wordwonk::Schema::Result::Session',
     'player_id'
 );
 
@@ -94,3 +94,4 @@ sub create_session {
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
 1;
+

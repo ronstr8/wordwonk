@@ -3,7 +3,7 @@ set -euo pipefail
 
 KUBECTL="/snap/bin/kubectl"
 SOCAT="sudo socat"
-NAMESPACE="wordwank"
+NAMESPACE="Wordwonk"
 INGRESS_NAME="ingress"
 
 echo "Starting Minikube Ingress Proxy Monitor..."
@@ -38,3 +38,4 @@ while true; do
     kill $PID_80 $PID_443 $PID_8888 2>/dev/null || true
     sleep 2
 done
+

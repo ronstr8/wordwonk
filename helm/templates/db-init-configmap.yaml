@@ -2,10 +2,10 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: db-init
-  namespace: {{ .Values.global.namespace | default "wordwank" }}
+  namespace: {{ .Values.global.namespace | default "wordwonk" }}
 data:
   01-bootstrap.sql: |
-    -- Wordwank PostgreSQL Schema
+    -- Wordwonk PostgreSQL Schema
     -- Enable UUID extension
     CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
@@ -24,7 +24,7 @@ data:
 
     -- Seed initial AI data if they don't exist
     INSERT INTO players (id, nickname, brain) VALUES
-    ('00000000-0000-4000-a000-000000000001', 'Yertyl', '{"schedule": {"mon": ["00:00-08:00"], "tue": ["00:00-08:00"], "wed": ["00:00-08:00"], "thu": ["00:00-08:00"], "fri": ["00:00-08:00"], "sat": ["00:00-08:00"], "sun": ["00:00-08:00"]}, "character_prompt": "You are Yertyl, a slow, thoughtful, and slightly grumpy turtle who hates being rushed. You speak in short, punchy sentences and occasionally complain about the speed of younger ’wankers’.", "wait_seconds_base": 15, "rnd_word_count": 3, "min_score_to_play": 1, "min_score_to_win": 40}')
+    ('00000000-0000-4000-a000-000000000001', 'Yertyl', '{"schedule": {"mon": ["00:00-08:00"], "tue": ["00:00-08:00"], "wed": ["00:00-08:00"], "thu": ["00:00-08:00"], "fri": ["00:00-08:00"], "sat": ["00:00-08:00"], "sun": ["00:00-08:00"]}, "character_prompt": "You are Yertyl, a slow, thoughtful, and slightly grumpy turtle who hates being rushed. You speak in short, punchy sentences and occasionally complain about the speed of younger ’wonks’.", "wait_seconds_base": 15, "rnd_word_count": 3, "min_score_to_play": 1, "min_score_to_win": 40}')
     ON CONFLICT (id) DO UPDATE SET brain = EXCLUDED.brain;
 
     INSERT INTO players (id, nickname, brain) VALUES
@@ -32,11 +32,11 @@ data:
     ON CONFLICT (id) DO UPDATE SET brain = EXCLUDED.brain;
 
     INSERT INTO players (id, nickname, brain) VALUES
-    ('00000000-0000-4000-a000-000000000003', 'Wanko', '{"schedule": {}, "probability": 0.2, "character_prompt": "You are Wanko, a self-proclaimed ’wank master’ who is overly confident and uses too many puns about ’wanking words’. You think you are the best at this game.", "wait_seconds_base": 8, "rnd_word_count": 8, "min_score_to_play": 10, "min_score_to_win": 25}')
+    ('00000000-0000-4000-a000-000000000003', 'Wonko', '{"schedule": {}, "probability": 0.2, "character_prompt": "You are Wonko, a self-proclaimed ’wonk master’ who is overly confident and uses too many puns about ’wonking words’. You think you are the best at this game.", "wait_seconds_base": 8, "rnd_word_count": 8, "min_score_to_play": 10, "min_score_to_win": 25}')
     ON CONFLICT (id) DO UPDATE SET brain = EXCLUDED.brain;
 
     INSERT INTO players (id, nickname, brain) VALUES
-    ('00000000-0000-4000-a000-000000000004', 'Scrabbler', '{"schedule": {"all": ["08:00-16:00"]}, "character_prompt": "You are Scrabbler, a serious, competitive linguist who thinks Wordwank is beneath them but plays it anyway. Use sophisticated vocabulary and sound slightly superior.", "wait_seconds_base": 12, "rnd_word_count": 10, "min_score_to_play": 15, "min_score_to_win": 20}')
+    ('00000000-0000-4000-a000-000000000004', 'Scrabbler', '{"schedule": {"all": ["08:00-16:00"]}, "character_prompt": "You are Scrabbler, a serious, competitive linguist who thinks Wordwonk is beneath them but plays it anyway. Use sophisticated vocabulary and sound slightly superior.", "wait_seconds_base": 12, "rnd_word_count": 10, "min_score_to_play": 15, "min_score_to_win": 20}')
     ON CONFLICT (id) DO UPDATE SET brain = EXCLUDED.brain;
 
     -- Linked Identitites (OAuth providers)

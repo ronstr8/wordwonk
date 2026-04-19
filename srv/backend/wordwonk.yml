@@ -1,8 +1,9 @@
 ---
-# Wordwank Perl Backend Configuration
+# Wordwonk Perl Backend Configuration
 # Currently driven primarily by Environment Variables
 hypnotoad:
   listen:
     - "http://*:3000"
   proxy: 1
   workers: 1
+

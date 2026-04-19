@@ -1,4 +1,4 @@
-package Wordwank::Web::Auth;
+package Wordwonk::Web::Auth;
 use Mojo::Base 'Mojolicious::Controller', -signatures;
 use Crypt::URandom qw(urandom);
 use DateTime;
@@ -144,7 +144,7 @@ sub _create_session ($self, $player) {
 sub passkey_challenge ($self) {
     my $wa = Authen::WebAuthn->new(
         rp_id   => $self->req->url->to_abs->host,
-        rp_name => "Wordwank",
+        rp_name => "Wordwonk",
         origin  => $self->req->url->to_abs->base->to_string,
     );
 
@@ -169,7 +169,7 @@ sub passkey_challenge ($self) {
     $self->render(json => {
         challenge => $challenge,
         user => $user_data,
-        rp => { name => "Wordwank", id => $self->req->url->to_abs->host },
+        rp => { name => "Wordwonk", id => $self->req->url->to_abs->host },
         pubKeyCredParams => [{ type => "public-key", alg => -7 }], # ES256
         timeout => 60000,
         attestation => "none",
@@ -182,7 +182,7 @@ sub passkey_verify ($self) {
     
     my $wa = Authen::WebAuthn->new(
         rp_id   => $self->req->url->to_abs->host,
-        rp_name => "Wordwank",
+        rp_name => "Wordwonk",
         origin  => $self->req->url->to_abs->base->to_string,
     );
 
@@ -240,7 +240,7 @@ sub anonymous_login ($self) {
     
     # Create a new anonymous player with proper UUID v4
     my $player_id = create_uuid_as_string(UUID_V4);
-    my $nickname = Wordwank::Web::Game::generate_procedural_name($player_id);
+    my $nickname = Wordwonk::Web::Game::generate_procedural_name($player_id);
     
     my $player = $schema->resultset('Player')->create({
         id       => $player_id,
@@ -283,3 +283,4 @@ sub logout ($self) {
 }
 
 1;
+

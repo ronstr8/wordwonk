@@ -1,4 +1,4 @@
--- Wordwank PostgreSQL Schema
+-- Wordwonk PostgreSQL Schema
 -- Version: 0.2.0
 
 BEGIN;
@@ -76,3 +76,4 @@ CREATE INDEX idx_plays_player ON plays(player_id);
 CREATE INDEX idx_sessions_expiry ON sessions(expires_at);
 
 COMMIT;
+

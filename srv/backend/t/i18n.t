@@ -20,7 +20,7 @@ Mojo::File->new($en_file)->spew(encode_json({
     }
 }));
 
-my $t = Test::Mojo->new('Wordwank');
+my $t = Test::Mojo->new('Wordwonk');
 
 subtest 'Basic Translation' => sub {
     is($t->app->t('test.key', 'en', { name => 'World' }), "Hello World", "Simple interpolation");
@@ -45,3 +45,4 @@ subtest 'Hot Reload' => sub {
 };
 
 done_testing();
+

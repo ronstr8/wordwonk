@@ -1,4 +1,4 @@
-package Wordwank::Game::Broadcaster;
+package Wordwonk::Game::Broadcaster;
 use Moose;
 use v5.36;
 
@@ -62,3 +62,4 @@ sub announce_to_game ($self, $msg, $game_id, $exclude_list = []) {
 }
 
 1;
+

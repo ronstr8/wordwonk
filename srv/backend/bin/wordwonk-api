@@ -11,4 +11,4 @@ push @INC, $lib;
 
 # Start Mojolicious application
 require Mojolicious::Commands;
-Mojolicious::Commands->start_app('Wordwank');
+Mojolicious::Commands->start_app('Wordwonk');

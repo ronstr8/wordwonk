@@ -42,7 +42,7 @@ sub setup_mock_ollama {
 
                 my $response = "I am a helpful character.";
                 if ($prompt =~ /Yertyl/) {
-                    $response = "Slow down, young wanker. I'm thinking.";
+                    $response = "Slow down, young WONKer. I'm thinking.";
                 }
                 
                 $tx->res->code(200);
@@ -111,7 +111,7 @@ subtest 'LLM AI Character Dialogue with Context' => sub {
         
         # Check for AI Chat
         if ($ai_name) {
-            if (my ($chat) = grep { $_->{type} eq 'chat' && ($_->{payload}{senderName} eq $ai_name || $_->{payload}{senderName} =~ /WankBot/) } @messages) {
+            if (my ($chat) = grep { $_->{type} eq 'chat' && ($_->{payload}{senderName} eq $ai_name || $_->{payload}{senderName} =~ /WONKBot/) } @messages) {
                 $ai_spoke = 1;
                 my $text = $chat->{payload}{text};
                 note("AI said: $text");

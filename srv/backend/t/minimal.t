@@ -10,8 +10,8 @@ use Mojo::Transaction::HTTP;
 $ENV{DATABASE_URL} = 'dbi:SQLite:dbname=:memory:';
 
 use lib 'lib';
-require Wordwank;
-my $t = Test::Mojo->new('Wordwank');
+require Wordwonk;
+my $t = Test::Mojo->new('Wordwonk');
 $t->app->schema->deploy;
 
 # Mock ua
@@ -79,3 +79,4 @@ subtest 'Minimal ASCII Test' => sub {
 };
 
 done_testing();
+

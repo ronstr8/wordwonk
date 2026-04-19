@@ -1,9 +1,9 @@
-package Wordwank;
+package Wordwonk;
 use Mojo::Base 'Mojolicious', -signatures;
 use utf8;
-use Wordwank::Schema;
-use Wordwank::Game::Scorer;
-use Wordwank::Game::Broadcaster;
+use Wordwonk::Schema;
+use Wordwonk::Game::Scorer;
+use Wordwonk::Game::Broadcaster;
 use Mojo::JSON qw(decode_json);
 use UUID::Tiny qw(:std);
 
@@ -18,7 +18,7 @@ has schema => sub {
 
     my $schema;
     eval {
-        $schema = Wordwank::Schema->connect($dsn, $ENV{DB_USER}, $ENV{DB_PASS}, {
+        $schema = Wordwonk::Schema->connect($dsn, $ENV{DB_USER}, $ENV{DB_PASS}, {
             pg_enable_utf8 => 1,
             quote_names    => 1,
             RaiseError     => 1,
@@ -36,9 +36,9 @@ has schema => sub {
 };
 
 
-has scorer => sub { Wordwank::Game::Scorer->new };
+has scorer => sub { Wordwonk::Game::Scorer->new };
 
-has broadcaster => sub ($self) { Wordwank::Game::Broadcaster->new(app => $self) };
+has broadcaster => sub ($self) { Wordwonk::Game::Broadcaster->new(app => $self) };
 
 # Track connected clients by Game UUID
 has games => sub { {} };
@@ -49,12 +49,12 @@ has chat_history => sub { [] };
 has ua => sub { Mojo::UserAgent->new };
 
 has wordd => sub ($self) { 
-    require Wordwank::Service::Wordd;
-    Wordwank::Service::Wordd->new(app => $self) 
+    require Wordwonk::Service::Wordd;
+    Wordwonk::Service::Wordd->new(app => $self) 
 };
 has state_processor => sub ($self) { 
-    require Wordwank::Game::StateProcessor;
-    Wordwank::Game::StateProcessor->new(
+    require Wordwonk::Game::StateProcessor;
+    Wordwonk::Game::StateProcessor->new(
         app                 => $self,
         quick_bonus_seconds => $self->config->{quick_bonus_seconds} // $ENV{QUICK_BONUS_SECONDS} // 5,
         unique_word_bonus   => $self->config->{unique_word_bonus}   // $ENV{UNIQUE_WORD_BONUS}   // 1,
@@ -62,12 +62,12 @@ has state_processor => sub ($self) {
     ) 
 };
 has game_registry => sub ($self) { 
-    require Wordwank::Game::Registry;
-    Wordwank::Game::Registry->new(app => $self) 
+    require Wordwonk::Game::Registry;
+    Wordwonk::Game::Registry->new(app => $self) 
 };
 has game_manager => sub ($self) {
-    require Wordwank::Game::Manager;
-    Wordwank::Game::Manager->new(app => $self)
+    require Wordwonk::Game::Manager;
+    Wordwonk::Game::Manager->new(app => $self)
 };
 
 # Shared i18n
@@ -76,12 +76,12 @@ has _languages_cache => sub { undef };
 
 sub startup ($self) {
     binmode(STDERR, ":utf8");
-    warn "DEBUG: [Wordwank] startup() BEGIN\n";
+    warn "DEBUG: [Wordwonk] startup() BEGIN\n";
     # Plugins
-    $self->plugin('NotYAMLConfig' => {file => 'wordwank.yml', optional => 1});
+    $self->plugin('NotYAMLConfig' => {file => 'wordwonk.yml', optional => 1});
     
     # Session Secrets
-    $self->secrets([$ENV{SESSION_SECRET} || 'wordwank-dev-secret-keep-it-safe']);
+    $self->secrets([$ENV{SESSION_SECRET} || 'wordwonk-dev-secret-keep-it-safe']);
 
     # Helpers
     $self->helper(schema => sub ($c) { $c->app->schema });
@@ -192,7 +192,7 @@ sub startup ($self) {
 
     # Routes
     my $r = $self->routes;
-    $r->namespaces(['Wordwank::Web']);
+    $r->namespaces(['Wordwonk::Web']);
 
     # Auth Routes
     my $auth = $r->any('/auth');
@@ -254,9 +254,9 @@ sub startup ($self) {
         if (my $sms_email = $ENV{ADMIN_SMS_EMAIL}) {
              require Email::Stuffer;
              eval {
-                 Email::Stuffer->from($ENV{MAIL_FROM} || 'noreply@wordwank.fazigu.org')
+                 Email::Stuffer->from($ENV{MAIL_FROM} || 'noreply@wordwonk.fazigu.org')
                               ->to($sms_email)
-                              ->subject('Wordwank Alert')
+                              ->subject('Wordwonk Alert')
                               ->text_body($message)
                               ->send;
                  $app->log->debug("Sent SMS notification to $sms_email");

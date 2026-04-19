@@ -45,9 +45,9 @@ $mock->mock('get', sub {
     return { success => 0, status => 404 };
 });
 
-use Wordwank::Game::Scorer;
+use Wordwonk::Game::Scorer;
 
-my $scorer = Wordwank::Game::Scorer->new;
+my $scorer = Wordwonk::Game::Scorer->new;
 
 # Mock environment
 $ENV{RACK_SIZE} = 7;
@@ -81,3 +81,4 @@ subtest 'Language-specific vowels (Spanish)' => sub {
 };
 
 done_testing();
+

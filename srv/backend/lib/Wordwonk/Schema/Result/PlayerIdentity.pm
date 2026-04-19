@@ -1,4 +1,4 @@
-package Wordwank::Schema::Result::PlayerIdentity;
+package Wordwonk::Schema::Result::PlayerIdentity;
 use Moose;
 use MooseX::NonMoose;
 extends 'DBIx::Class::Core';
@@ -30,10 +30,11 @@ __PACKAGE__->set_primary_key('id');
 __PACKAGE__->add_unique_constraint([qw/provider provider_id/]);
 
 __PACKAGE__->belongs_to(
-    player => 'Wordwank::Schema::Result::Player',
+    player => 'Wordwonk::Schema::Result::Player',
     'player_id'
 );
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
 1;
+

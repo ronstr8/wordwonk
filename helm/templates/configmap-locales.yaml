@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: wordwank-locales
+  name: Wordwonk-locales
   namespace: {{ .Values.global.namespace }}
   labels:
     app.kubernetes.io/managed-by: Helm
   annotations:
-    meta.helm.sh/release-name: wordwank
+    meta.helm.sh/release-name: Wordwonk
     meta.helm.sh/release-namespace: {{ .Values.global.namespace }}
 data:
   en.json: |-
@@ -19,4 +19,5 @@ data:
 {{ .Files.Get "share/locale/de.json" | nindent 4 }}
   ru.json: |-
 {{ .Files.Get "share/locale/ru.json" | nindent 4 }}
+
 

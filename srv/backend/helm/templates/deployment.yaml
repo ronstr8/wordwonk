@@ -103,7 +103,7 @@ spec:
       volumes:
         - name: locales-volume
           configMap:
-            name: wordwank-locales
+            name: Wordwonk-locales
 ---
 apiVersion: v1
 kind: Service

@@ -10,16 +10,16 @@ use Mojo::Log;
 my $lib = catdir(dirname(__FILE__), '..', 'lib');
 push @INC, $lib;
 
-require Wordwank::Schema;
+require Wordwonk::Schema;
 
 my $log = Mojo::Log->new;
-my $dsn = $ENV{DATABASE_URL} || 'dbi:Pg:dbname=wordwank;host=postgresql';
+my $dsn = $ENV{DATABASE_URL} || 'dbi:Pg:dbname=Wordwonk;host=postgresql';
 my $user = $ENV{DB_USER};
 my $pass = $ENV{DB_PASS};
 
 $log->info("Starting migrations on $dsn...");
 
-my $schema = Wordwank::Schema->connect($dsn, $user, $pass, {
+my $schema = Wordwonk::Schema->connect($dsn, $user, $pass, {
     pg_enable_utf8 => 1,
     quote_names    => 1,
     RaiseError     => 1,
@@ -78,3 +78,4 @@ for my $file (@files) {
 }
 
 $log->info("All migrations completed successfully.");
+

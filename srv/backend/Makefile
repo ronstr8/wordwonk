@@ -19,7 +19,7 @@ clean: ## Clean up temporary files
 	find . -name '*~' -delete
 
 run: ## Run the backend server (development mode)
-	morbo script/wordwank
+	morbo script/Wordwonk
 
 dev: deps ## Setup for development (install deps)
 	@echo "Development environment ready!"
@@ -27,3 +27,4 @@ dev: deps ## Setup for development (install deps)
 all: deps test ## Install dependencies and run tests (default)
 
 .DEFAULT_GOAL := all
+

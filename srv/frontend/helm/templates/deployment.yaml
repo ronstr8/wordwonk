@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: "{{ .Values.global.registry }}/wordwank-frontend:{{ .Values.imageTag | default .Values.global.imageTag }}"
+          image: "{{ .Values.global.registry }}/Wordwonk-frontend:{{ .Values.imageTag | default .Values.global.imageTag }}"
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           ports:
             - containerPort: 80
@@ -31,7 +31,7 @@ spec:
             name: frontend-config
         - name: locales-volume
           configMap:
-            name: wordwank-locales
+            name: Wordwonk-locales
 ---
 apiVersion: v1
 kind: Service
@@ -46,3 +46,4 @@ spec:
       name: http
   selector:
     app: frontend
+

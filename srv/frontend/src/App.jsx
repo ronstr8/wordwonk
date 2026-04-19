@@ -262,7 +262,7 @@ function App() {
                         <p className="donation-text">{t('app.donate_desc')}</p>
                         <div className="donation-options">
                             {CONFIG.PAYPAL_ENABLED && <a href={`https://www.paypal.com/donate/?business=${encodeURIComponent(CONFIG.PAYPAL_EMAIL)}&no_recurring=0&currency_code=USD`} target="_blank" rel="noopener noreferrer" className="donation-link paypal"><span>PayPal</span></a>}
-                            {CONFIG.KOFI_ENABLED && <a href={`https://ko-fi.com/${CONFIG.KOFI_ID || 'wordwank'}`} target="_blank" rel="noopener noreferrer" className="donation-link kofi"><span>Ko-fi</span></a>}
+                            {CONFIG.KOFI_ENABLED && <a href={`https://ko-fi.com/${CONFIG.KOFI_ID || 'wordwonk'}`} target="_blank" rel="noopener noreferrer" className="donation-link kofi"><span>Ko-fi</span></a>}
                         </div>
                     </div>
                 </DraggablePanel>

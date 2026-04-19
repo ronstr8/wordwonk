@@ -3,9 +3,9 @@ use warnings;
 use utf8;
 use Test::More;
 use lib 'lib';
-use Wordwank::Game::Scorer;
+use Wordwonk::Game::Scorer;
 
-my $scorer = Wordwank::Game::Scorer->new();
+my $scorer = Wordwonk::Game::Scorer->new();
 
 sub calculate_prefix {
     my ($word, $elapsed, $quick_bonus_seconds, $rack_size) = @_;
@@ -33,14 +33,15 @@ subtest 'Emoji Prefix Logic' => sub {
 
     # Tuesday = 'T' is the bonus char
     is(calculate_prefix('CAT', 1, $quick_bonus_seconds, 7), '⚡📅 ', 'Quick play on standard 7 with T gets lightning + calendar');
-    is(calculate_prefix('WORDWANK', 6, $quick_bonus_seconds, 8), '💯✨ ', 'Full rack (8) no T gets 100 + sparkles');
+    is(calculate_prefix('Wordwonk', 6, $quick_bonus_seconds, 8), '💯✨ ', 'Full rack (8) no T gets 100 + sparkles');
     
     # New threshold for 8 rack is 5 letters (int(8/2)+1 = 5)
-    is(calculate_prefix('WANK', 6, $quick_bonus_seconds, 8), '', '4 letters on 8 rack no T gets nothing');
-    is(calculate_prefix('WANKER', 6, $quick_bonus_seconds, 8), '✨ ', '6 letters on 8 rack no T gets sparkles');
+    is(calculate_prefix('WONK', 6, $quick_bonus_seconds, 8), '', '4 letters on 8 rack no T gets nothing');
+    is(calculate_prefix('WONKER', 6, $quick_bonus_seconds, 8), '✨ ', '6 letters on 8 rack no T gets sparkles');
     
     is(calculate_prefix('CAT', 6, $quick_bonus_seconds, 7), '📅 ', 'Normal play on standard 7 with T gets calendar');
-    is(calculate_prefix('WANKER', 1, $quick_bonus_seconds, 8), '⚡✨ ', 'Quick + 6 letters on 8 rack no T');
+    is(calculate_prefix('WONKER', 1, $quick_bonus_seconds, 8), '⚡✨ ', 'Quick + 6 letters on 8 rack no T');
 };
 
 done_testing();
+

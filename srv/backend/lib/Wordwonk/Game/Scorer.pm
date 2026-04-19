@@ -1,4 +1,4 @@
-package Wordwank::Game::Scorer;
+package Wordwonk::Game::Scorer;
 use Moose;
 use v5.36;
 use utf8;
@@ -261,3 +261,4 @@ sub can_form_word ($self, $word, $rack) {
 }
 
 1;
+

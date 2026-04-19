@@ -1,6 +1,6 @@
 use Test::More;
 use Mojo::Base -signatures;
-use Wordwank::Game::Broadcaster;
+use Wordwonk::Game::Broadcaster;
 
 # Mock App
 package MockApp {
@@ -19,7 +19,7 @@ package MockClient {
 }
 
 my $app = MockApp->new;
-my $broadcaster = Wordwank::Game::Broadcaster->new(app => $app);
+my $broadcaster = Wordwonk::Game::Broadcaster->new(app => $app);
 
 # Setup a game with some clients
 my $gid = 'game-1';
@@ -64,3 +64,4 @@ subtest 'announce_to_game' => sub {
 };
 
 done_testing();
+

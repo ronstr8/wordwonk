@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Wordwank will be documented in this file.
+All notable changes to Wordwonk will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - **Frontend Architecture Overhaul**: Refactored the monolithic `App.jsx` (~1150 lines) into a modular, hook-based architecture, reducing primary component size by 70%.
 - **Custom Hooks Ecosystem**: Introduced specialized hooks (`usePlayerAuth`, `useGameState`, `useGameSocket`, `useGameController`, `useInteractionHandler`) to cleanly separate network I/O, game state, and user interaction logic.
 - **Component Decomposition**: Extracted `GameHeader` and `GameArea` into dedicated, reusable components to improve UI maintainability.
-- **Backend Configuration Hardening**: Refactored `Wordwank::Game::StateProcessor` to utilize Moose attributes for scoring rules, enabling dependency injection and decoupling critical game logic from environment variables.
+- **Backend Configuration Hardening**: Refactored `Wordwonk::Game::StateProcessor` to utilize Moose attributes for scoring rules, enabling dependency injection and decoupling critical game logic from environment variables.
 - **Rust Service Modularization**: Extracted state bootstrapping in the `wordd` service into dedicated functions, cleaning up `main.rs` and improving startup orchestration.
 
 ### Fixed (1.14.0)
@@ -71,10 +71,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### Refactored (1.9.0)
 
 - **Backend Architecture Overhaul**: Refactored monolithic `Game.pm` into specialized modules:
-  - `Wordwank::Game::Manager`: Handles game lifecycle and player joining.
-  - `Wordwank::Game::StateProcessor`: Manages scoring, bonuses, and results calculation.
-  - `Wordwank::Game::Registry`: Handles game discovery and creation logic.
-  - `Wordwank::Service::Wordd`: Cleaned up interface for the word validation service.
+  - `Wordwonk::Game::Manager`: Handles game lifecycle and player joining.
+  - `Wordwonk::Game::StateProcessor`: Manages scoring, bonuses, and results calculation.
+  - `Wordwonk::Game::Registry`: Handles game discovery and creation logic.
+  - `Wordwonk::Service::Wordd`: Cleaned up interface for the word validation service.
 
 ### Fixed (1.9.0)
 
@@ -664,3 +664,4 @@ transition to a microservices pattern with Go, Rust, Java, and React.
 ---
 
 _Remember: If you find a bug, it's a surprise mechanic. If you like a feature, it was intentional all along._
+

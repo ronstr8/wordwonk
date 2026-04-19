@@ -1,16 +1,16 @@
-package Wordwank::Web::Game;
+package Wordwonk::Web::Game;
 use Mojo::Base 'Mojolicious::Controller', -signatures;
 use v5.36;
 use utf8;
 use Mojo::JSON qw(encode_json decode_json);
 use Mojo::Util;
 use UUID::Tiny qw(:std);
-use Wordwank::Util::NameGenerator;
+use Wordwonk::Util::NameGenerator;
 
 my $DEFAULT_LANG = $ENV{DEFAULT_LANG} || 'en';
 
 sub generate_procedural_name ($id) {
-    return Wordwank::Util::NameGenerator->new->generate(4, 1, $id);
+    return Wordwonk::Util::NameGenerator->new->generate(4, 1, $id);
 }
 
 sub websocket ($self) {
@@ -82,3 +82,4 @@ sub websocket ($self) {
 }
 
 1;
+

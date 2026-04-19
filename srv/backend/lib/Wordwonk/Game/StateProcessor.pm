@@ -1,4 +1,4 @@
-package Wordwank::Game::StateProcessor;
+package Wordwonk::Game::StateProcessor;
 use Moose;
 use v5.36;
 use utf8;
@@ -144,3 +144,4 @@ sub is_solo ($self, $plays, $ai_player_ids = []) {
 }
 
 1;
+

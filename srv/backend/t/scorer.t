@@ -31,10 +31,10 @@ $mock->mock('get', sub {
     return { success => 0, status => 404 };
 });
 
-use_ok('Wordwank::Game::Scorer');
+use_ok('Wordwonk::Game::Scorer');
 
-my $scorer = Wordwank::Game::Scorer->new;
-isa_ok($scorer, 'Wordwank::Game::Scorer');
+my $scorer = Wordwonk::Game::Scorer->new;
+isa_ok($scorer, 'Wordwonk::Game::Scorer');
 
 subtest 'Rack Generation' => sub {
     my $lang = 'en';
@@ -82,3 +82,4 @@ subtest 'Word Formation' => sub {
 };
 
 done_testing();
+

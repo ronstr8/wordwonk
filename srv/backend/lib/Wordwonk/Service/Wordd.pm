@@ -1,4 +1,4 @@
-package Wordwank::Service::Wordd;
+package Wordwonk::Service::Wordd;
 use Mojo::Base -base, -signatures;
 use Mojo::URL;
 
@@ -22,3 +22,4 @@ sub suggest ($self, $letters, $lang, $cb) {
 }
 
 1;
+

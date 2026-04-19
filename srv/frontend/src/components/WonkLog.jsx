@@ -1,9 +1,9 @@
 import MessageList from './MessageList';
 
-const WankerLog = ({ messages }) => {
+const WonkLog = ({ messages }) => {
     return (
         <MessageList messages={messages} />
     );
 };
 
-export default WankerLog;
+export default WonkLog;

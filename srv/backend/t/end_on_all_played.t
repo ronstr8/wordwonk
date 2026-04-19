@@ -3,13 +3,13 @@ use Test::More;
 use Test::Mojo;
 use Data::Dumper;
 use DateTime;
-use Wordwank::Schema;
+use Wordwonk::Schema;
 
 # Mock environment
 $ENV{END_ON_ALL_PLAYED} = 'true';
 $ENV{DATABASE_URL} = 'dbi:SQLite:dbname=:memory:';
 
-my $t = Test::Mojo->new('Wordwank');
+my $t = Test::Mojo->new('Wordwonk');
 my $app = $t->app;
 
 # Mock Wordd validation to be synchronous for unit testing
@@ -22,11 +22,11 @@ package MockResponse {
     sub json { shift->{json} }
 }
 
-require Wordwank::Service::Wordd;
+require Wordwonk::Service::Wordd;
 {
     no strict 'refs';
     no warnings 'redefine';
-    *Wordwank::Service::Wordd::validate = sub {
+    *Wordwonk::Service::Wordd::validate = sub {
         my ($self, $word, $lang, $cb) = @_;
         $cb->(MockResponse->new(1, {
             is_valid => 1,
@@ -112,3 +112,4 @@ ok($updated_game->finished_at, "Game ended early after all players played");
 
 diag("Test complete.");
 done_testing();
+

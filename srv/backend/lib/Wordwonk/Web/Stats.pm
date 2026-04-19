@@ -1,4 +1,4 @@
-package Wordwank::Web::Stats;
+package Wordwonk::Web::Stats;
 use Mojo::Base 'Mojolicious::Controller', -signatures;
 
 sub leaderboard ($self) {
@@ -77,3 +77,4 @@ sub leaderboard ($self) {
 }
 
 1;
+

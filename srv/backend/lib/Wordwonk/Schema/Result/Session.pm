@@ -1,4 +1,4 @@
-package Wordwank::Schema::Result::Session;
+package Wordwonk::Schema::Result::Session;
 use Moose;
 use MooseX::NonMoose;
 extends 'DBIx::Class::Core';
@@ -25,10 +25,11 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key('id');
 
 __PACKAGE__->belongs_to(
-    player => 'Wordwank::Schema::Result::Player',
+    player => 'Wordwonk::Schema::Result::Player',
     'player_id'
 );
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
 1;
+

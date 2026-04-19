@@ -1,4 +1,4 @@
-package Wordwank::Game::Registry;
+package Wordwonk::Game::Registry;
 use Moose;
 use v5.36;
 use utf8;
@@ -114,7 +114,7 @@ sub get_or_create_game ($self, $player, $invite_gid = undef) {
 
 sub _init_in_memory_game ($self, $gid, $game_record, $lang, $time_left = undef) {
     my $app = $self->app;
-    require Wordwank::Game::AI;
+    require Wordwonk::Game::AI;
     
     my ($scheduled, $extra) = $app->schema->resultset('Player')->find_active_ais();
     my @ais;
@@ -122,16 +122,16 @@ sub _init_in_memory_game ($self, $gid, $game_record, $lang, $time_left = undef) 
     # Priority 1: Pick ONE random AI from scheduled ones
     if (@$scheduled) {
         my $ai = $scheduled->[int(rand(@$scheduled))];
-        push @ais, Wordwank::Game::AI->new_from_player($app, $gid, $ai, $lang);
+        push @ais, Wordwonk::Game::AI->new_from_player($app, $gid, $ai, $lang);
     } 
     # Priority 2: Pick the extra jump-in AI if no one is scheduled
     elsif ($extra) {
-        push @ais, Wordwank::Game::AI->new_from_player($app, $gid, $extra, $lang);
+        push @ais, Wordwonk::Game::AI->new_from_player($app, $gid, $extra, $lang);
     }
     # Priority 3: Fallback random AI if still no one
     else {
         my $random_ai = $app->schema->resultset('Player')->search({ brain => { '!=', undef } }, { order_by => 'random()', rows => 1 })->single;
-        push @ais, Wordwank::Game::AI->new_from_player($app, $gid, $random_ai, $lang) if $random_ai;
+        push @ais, Wordwonk::Game::AI->new_from_player($app, $gid, $random_ai, $lang) if $random_ai;
     }
 
     $app->games->{$gid} = {
@@ -143,3 +143,4 @@ sub _init_in_memory_game ($self, $gid, $game_record, $lang, $time_left = undef) 
 }
 
 1;
+

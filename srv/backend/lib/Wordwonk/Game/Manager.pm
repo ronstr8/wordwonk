@@ -1,4 +1,4 @@
-package Wordwank::Game::Manager;
+package Wordwonk::Game::Manager;
 use Mojo::Base -base, -signatures;
 use Mojo::JSON qw(encode_json decode_json);
 use Mojo::Util;
@@ -84,7 +84,7 @@ sub join_player ($self, $controller, $player, $payload = undef) {
         $app->notify_admin($controller->t('app.invite_notify', $game_lang, { 
             name => $player->nickname, 
             lang => $full_lang,
-            url  => 'https://wordwank.fazigu.org' 
+            url  => 'https://Wordwonk.fazigu.org' 
         }));
     }
 
@@ -604,3 +604,4 @@ sub _check_all_played ($self, $game_id) {
 }
 
 1;
+

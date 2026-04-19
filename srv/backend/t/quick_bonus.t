@@ -3,13 +3,13 @@ use Test::More;
 use Test::Mojo;
 use Data::Dumper;
 use DateTime;
-use Wordwank::Schema;
+use Wordwonk::Schema;
 
 # Mock environment
 $ENV{DATABASE_URL} = 'dbi:SQLite:dbname=:memory:';
 $ENV{QUICK_BONUS_SECONDS} = 5;
 
-my $t = Test::Mojo->new('Wordwank');
+my $t = Test::Mojo->new('Wordwonk');
 my $app = $t->app;
 my $schema = $app->schema;
 $schema->deploy;
@@ -83,3 +83,4 @@ is($flash_res->{score}, 4 + 2, "Flash total: 4 (base) + 2 (unique)");
 
 diag("Test complete.");
 done_testing();
+

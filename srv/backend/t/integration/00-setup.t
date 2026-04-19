@@ -7,7 +7,7 @@ use lib 'lib', 't/lib';
 plan tests => 4;
 
 # Test 1: Can we load the main app?
-use_ok('Wordwank');
+use_ok('Wordwonk');
 
 # Test 2: Can we load Test::Mojo?
 use_ok('Test::Mojo');
@@ -25,3 +25,4 @@ diag("App has scorer: " . (defined $t->app->scorer ? 'YES' : 'NO'));
 diag("App has broadcaster: " . (defined $t->app->broadcaster ? 'YES' : 'NO'));
 
 done_testing();
+

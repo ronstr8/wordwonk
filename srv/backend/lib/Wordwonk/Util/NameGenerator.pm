@@ -1,4 +1,4 @@
-package Wordwank::Util::NameGenerator;
+package Wordwonk::Util::NameGenerator;
 
 use List::Util qw(any);
 use Mojo::Base -base, -signatures;
@@ -73,3 +73,4 @@ sub generate ($self, $base_syllables = 4, $use_blends = 1, $seed_str = undef) {
 }
 
 1;
+

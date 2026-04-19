@@ -30,4 +30,5 @@ EXPOSE 3000
 
 # Start with Hypnotoad for production performance
 ENV MOJO_LISTEN="http://*:3000"
-CMD ["hypnotoad", "-f", "bin/wordwank-api"]
+CMD ["hypnotoad", "-f", "bin/Wordwonk-api"]
+

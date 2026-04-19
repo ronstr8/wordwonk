@@ -1,16 +1,16 @@
-package Wordwank::Game::AI;
+package Wordwonk::Game::AI;
 use Mojo::Base -base, -signatures;
 use utf8;
 use Mojo::Util;
 use UUID::Tiny qw(:std);
-use Wordwank::Util::NameGenerator;
+use Wordwonk::Util::NameGenerator;
 use Mojo::JSON qw(encode_json decode_json);
 use Mojo::UserAgent;
 
 has 'app';
 has 'game_id';
 has 'player_id' => sub { create_uuid_as_string(UUID_V4) };
-has 'nickname'  => sub { Wordwank::Util::NameGenerator->new->generate(4, 1) };
+has 'nickname'  => sub { Wordwonk::Util::NameGenerator->new->generate(4, 1) };
 has 'language'  => 'en';
 
 # AI Config
@@ -299,3 +299,4 @@ sub check_reaction ($self, $player_name, $player_score) {
 }
 
 1;
+
