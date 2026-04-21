@@ -5,7 +5,8 @@ global:
   externalPort: 80
   registry: localhost:5000
   namespace: wordwonk
-  imageTag: 1.14.0
+  projectName: "wordwonk"
+  imageTag: 1.15.1
   imagePullPolicy: Always
   maxPlayers: 13
   randomLetterScoreMode: "true"
@@ -61,16 +62,14 @@ wordd:
 
 backend:
   enabled: true
-  image:
-    tag: "latest"
   service:
     port: 3000
   ollama:
     url: "http://ollama:11434"
     model: "phi3:mini"
   database:
-    url: "dbi:Pg:dbname=wordwank;host=postgresql"
-    user: "wordwank_backend"
+    url: "dbi:Pg:dbname=wordwonk;host=postgresql"
+    user: "wordwonk_backend"
   env:
     ADMIN_SMS_EMAIL: "17169032417@tmomail.net"
     CHAT_HISTORY_SIZE: 50
@@ -82,10 +81,12 @@ postgresql:
   enabled: true
   fullnameOverride: postgresql
   image:
-    tag: "latest"
+    registry: "docker.io"
+    repository: "bitnamilegacy/postgresql"
+    tag: "16.4.0-debian-12-r0"
   auth:
-    database: "wordwank"
-    username: "wordwank_backend"
+    database: "wordwonk"
+    username: "wordwonk_backend"
   primary:
     initdb:
       scriptsConfigMap: db-init
@@ -96,13 +97,12 @@ postgresql:
     enabled: true
     image:
       repository: busybox
-      tag: latest
+      tag: 1.36.1
 
 ollama:
   enabled: true
   image:
     repository: localhost:5000/wordwonk-ollama
-    tag: latest
   service:
     type: ClusterIP
     port: 11434

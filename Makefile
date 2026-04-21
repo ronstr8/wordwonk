@@ -2,15 +2,16 @@
 
 # Localhost is always allowed as an insecure registry by Docker
 REGISTRY = localhost:5000
-# Single point of truth for versions is helm/values.yaml
-TAG ?= $(shell grep -m 1 "imageTag:" helm/values.yaml | sed 's/.*imageTag:[[:space:]]*//' | tr -d ' "')
+# Single point of truth for versions is VERSION
+TAG ?= $(shell cat VERSION)
+PROJECT_NAME ?= wordwonk
 DOCKER_BUILD_FLAGS ?= --progress=plain
 NAMESPACE = wordwonk
 DOMAIN = wordwonk.fazigu.org
 
 SERVICES = frontend backend wordd ollama
 
-.PHONY: all build clean deploy undeploy help backup $(SERVICES)
+.PHONY: all build clean deploy undeploy help backup ensure-namespace $(SERVICES)
 
 all: build
 
@@ -21,32 +22,21 @@ help:
 	@echo "  make deploy             - Install/Upgrade using Helm umbrella chart"
 	@echo "  make <service>          - Build, Push, and Restart a specific service"
 
+ensure-namespace:
+	@kubectl create namespace $(NAMESPACE) --dry-run=client -o yaml | kubectl apply -f -
+
 # Docker Build & Push Targets
 build: $(SERVICES)
 
-frontend:
-	docker build $(DOCKER_BUILD_FLAGS) -t $(REGISTRY)/wordwonk-frontend:$(TAG) ./srv/frontend
-	docker push $(REGISTRY)/wordwonk-frontend:$(TAG)
-	kubectl rollout restart deployment/frontend -n $(NAMESPACE) || true
-	kubectl rollout status deployment/frontend -n $(NAMESPACE) || true
-
-wordd:
-	docker build $(DOCKER_BUILD_FLAGS) -t $(REGISTRY)/wordwonk-wordd:$(TAG) ./srv/wordd
-	docker push $(REGISTRY)/wordwonk-wordd:$(TAG)
-	kubectl rollout restart deployment/wordd -n $(NAMESPACE) || true
-	kubectl rollout status deployment/wordd -n $(NAMESPACE) || true
-
-backend:
-	docker build $(DOCKER_BUILD_FLAGS) -t $(REGISTRY)/wordwonk-backend:$(TAG) ./srv/backend
-	docker push $(REGISTRY)/wordwonk-backend:$(TAG)
-	kubectl rollout restart deployment/backend -n $(NAMESPACE) || true
-	kubectl rollout status deployment/backend -n $(NAMESPACE) || true
-
-ollama:
-	docker build $(DOCKER_BUILD_FLAGS) -t $(REGISTRY)/wordwonk-ollama:$(TAG) ./srv/ollama
-	docker push $(REGISTRY)/wordwonk-ollama:$(TAG)
-	kubectl rollout restart deployment/ollama -n $(NAMESPACE) || true
-	kubectl rollout status deployment/ollama -n $(NAMESPACE) || true
+$(SERVICES): ensure-namespace
+	docker build $(DOCKER_BUILD_FLAGS) -t $(REGISTRY)/$(PROJECT_NAME)-$@:$(TAG) ./srv/$@
+	docker push $(REGISTRY)/$(PROJECT_NAME)-$@:$(TAG)
+	@if kubectl get deployment $@ -n $(NAMESPACE) > /dev/null 2>&1; then \
+		kubectl rollout restart deployment/$@ -n $(NAMESPACE); \
+		kubectl rollout status deployment/$@ -n $(NAMESPACE); \
+	else \
+		echo "⚠️  deployment/$@ not found in namespace $(NAMESPACE). Run 'make deploy' first."; \
+	fi
 
 migrate: ## Run pending database migrations inside the cluster
 	kubectl exec -n $(NAMESPACE) -it deploy/backend -- perl -Ilib bin/migrate.pl
@@ -59,9 +49,10 @@ backup: ## Create a timestamped SQL backup of the wordwonk database
 # i18n Note: Master truth lives in helm/share/locale/
 # Both frontend and backend mount the wordwonk-locales ConfigMap.
 
-deploy:
+deploy: ensure-namespace
 	node scripts/sync-version.js
 	@mkdir -p helm/share/locale
+	rm -rf helm/charts/*.tgz
 	helm dependency update ./helm
 	kubectl delete configmap wordwonk-locales --namespace $(NAMESPACE) --ignore-not-found
 	helm upgrade --install wordwonk ./helm \

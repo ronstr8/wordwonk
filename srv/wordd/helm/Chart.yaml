@@ -3,4 +3,4 @@ name: wordd
 description: A Rust-based microservice for Wordwonk word validation
 type: application
 version: 0.11.0
-appVersion: "1.14.0"
+appVersion: "1.15.1"

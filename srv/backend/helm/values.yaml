@@ -1,13 +1,10 @@
 replicaCount: 1
-image:
-  repository: localhost:5000/wordwonk-backend
-  pullPolicy: Always
-  tag: "0.23.0"
-  logLevel: debug
-  chatHistorySize: 50
+imagePullPolicy: Always
+logLevel: debug
+chatHistorySize: 50
 service:
   type: ClusterIP
   port: 3000
 database:
-  url: "dbi:Pg:dbname=wordwank;host=postgresql"
-  user: "postgres"
+  url: "dbi:Pg:dbname=wordwonk;host=postgresql"
+  user: "wordwonk_backend"
