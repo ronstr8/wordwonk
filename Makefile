@@ -46,12 +46,13 @@ backup: ## Create a timestamped SQL backup of the wordwonk database
 
 
 # Helm Commands
-# i18n Note: Master truth lives in helm/share/locale/
+# i18n Note: Master truth lives in srv/frontend/share/locale/
 # Both frontend and backend mount the wordwonk-locales ConfigMap.
 
 deploy: ensure-namespace
 	node scripts/sync-version.js
 	@mkdir -p helm/share/locale
+	@cp srv/frontend/share/locale/*.json helm/share/locale/
 	rm -rf helm/charts/*.tgz
 	helm dependency update ./helm
 	kubectl delete configmap wordwonk-locales --namespace $(NAMESPACE) --ignore-not-found
@@ -72,11 +73,11 @@ locales:
 	@kubectl delete configmap wordwonk-locales --namespace $(NAMESPACE) --ignore-not-found
 	@kubectl create configmap wordwonk-locales \
 		--namespace $(NAMESPACE) \
-		--from-file=en.json=helm/share/locale/en.json \
-		--from-file=es.json=helm/share/locale/es.json \
-		--from-file=fr.json=helm/share/locale/fr.json \
-		--from-file=de.json=helm/share/locale/de.json \
-		--from-file=ru.json=helm/share/locale/ru.json
+		--from-file=en.json=srv/frontend/share/locale/en.json \
+		--from-file=es.json=srv/frontend/share/locale/es.json \
+		--from-file=fr.json=srv/frontend/share/locale/fr.json \
+		--from-file=de.json=srv/frontend/share/locale/de.json \
+		--from-file=ru.json=srv/frontend/share/locale/ru.json
 	@echo "✅ ConfigMap updated. Pods will pick up changes within 5 minutes."
 
 # Lexicon generation from Hunspell dictionaries

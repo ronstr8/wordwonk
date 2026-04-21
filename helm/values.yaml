@@ -6,7 +6,7 @@ global:
   registry: localhost:5000
   namespace: wordwonk
   projectName: "wordwonk"
-  imageTag: 1.15.1
+  imageTag: 2.0.0-RC1
   imagePullPolicy: Always
   maxPlayers: 13
   randomLetterScoreMode: "true"

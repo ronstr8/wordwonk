@@ -33,3 +33,4 @@ helm/secrets.yaml
 .settings/
 *.sublime-project
 *.sublime-workspace
+helm/share/
