@@ -27,7 +27,7 @@ global:
   projectCodeLink: "https://github.com/ronstr8/wordwonk"
   scoreAgainstAI: "true"
   endOnAllPlayed: "true"
-  storageClass: "wordwank-db-local"
+  storageClass: "wordwonk-db-local"
   persistence:
     manualPV: true
 

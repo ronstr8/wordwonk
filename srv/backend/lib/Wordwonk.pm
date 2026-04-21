@@ -9,7 +9,7 @@ use UUID::Tiny qw(:std);
 
 has schema => sub {
     my $self = shift;
-    my $dsn = $ENV{DATABASE_URL} || 'dbi:Pg:dbname=wordwank;host=postgresql';
+    my $dsn = $ENV{DATABASE_URL} || 'dbi:Pg:dbname=wordwonk;host=postgresql';
 
     # Defensive logging (clean DSN for logs)
     my $log_dsn = $dsn;

@@ -10,9 +10,9 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: {{ .Values.global.storageClass | default "wordwank-db-local" }}
+  storageClassName: {{ .Values.global.storageClass | default "wordwonk-db-local" }}
   hostPath:
-    path: /mnt/moor-storage/wordwank-db
+    path: /mnt/k8s-volumes/wordwonk-db
     type: DirectoryOrCreate
 {{- end -}}
 
