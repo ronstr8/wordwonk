@@ -75,6 +75,25 @@
     line-height: 1;
 }
 
+/* Mutant tile — borne of natural selection */
+@keyframes mutant-throb {
+    0%, 100% { box-shadow: 0 0 6px 2px rgba(0, 230, 100, 0.35), 0 4px 8px rgba(0,0,0,0.3); }
+    50%       { box-shadow: 0 0 16px 6px rgba(0, 230, 100, 0.65), 0 4px 8px rgba(0,0,0,0.3); }
+}
+
+.tile-wrapper.mutant .tile-front {
+    border-color: #00e664;
+    animation: mutant-throb 2.4s ease-in-out infinite;
+}
+
+.tile-wrapper.mutant .tile-letter {
+    color: #00ff7f;
+}
+
+.tile-wrapper.mutant .tile-value {
+    color: #00ff7f;
+}
+
 /* Disabled tile (greyed out when used) */
 .tile-wrapper.disabled {
     opacity: 0.3;

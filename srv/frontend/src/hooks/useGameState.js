@@ -17,6 +17,7 @@ export default function useGameState(t) {
     const [messages, setMessages] = useState([]);
     const [toasts, setToasts] = useState([]);
     const [chatToasts, setChatToasts] = useState([]);
+    const [mutantLetter, setMutantLetter] = useState(null);
 
     const rackRef = useRef([]);
     const guessRef = useRef([]);
@@ -77,6 +78,7 @@ export default function useGameState(t) {
         toasts, setToasts, showToast,
         chatToasts, setChatToasts, showChatToast,
         logSystemMessage,
-        handleTimerTick
+        handleTimerTick,
+        mutantLetter, setMutantLetter
     };
 }

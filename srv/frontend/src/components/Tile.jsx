@@ -1,12 +1,12 @@
 import { motion } from 'framer-motion'
 import './Tile.css'
 
-const Tile = ({ letter, value, disabled }) => {
+const Tile = ({ letter, value, disabled, isMutant }) => {
     const isBlankPlayed = (letter === letter.toLowerCase() && letter !== '_' && letter !== '');
     const displayValue = isBlankPlayed ? 0 : (value !== undefined ? value : '');
     return (
         <motion.div
-            className={`tile-wrapper ${isBlankPlayed ? 'is-blank' : ''} ${disabled ? 'disabled' : ''}`}
+            className={`tile-wrapper ${isBlankPlayed ? 'is-blank' : ''} ${disabled ? 'disabled' : ''} ${isMutant ? 'mutant' : ''}`}
             initial={{ rotateY: 180 }}
             animate={{ rotateY: 0 }}
             transition={{

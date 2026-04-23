@@ -32,6 +32,11 @@ __PACKAGE__->add_columns(
         data_type => 'timestamp with time zone',
         is_nullable => 1,
     },
+    mutant_letter => {
+        data_type => 'varchar',
+        size => 2,
+        is_nullable => 1,
+    },
     language => {
         data_type => 'varchar',
         size => 10,

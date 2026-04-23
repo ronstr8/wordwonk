@@ -71,6 +71,7 @@ sub join_player ($self, $controller, $player, $payload = undef) {
             unicorns      => $app->scorer->unicorns($game_lang),
             time_left     => $app->games->{$gid}{time_left},
             players       => [ @other_nicknames, map { $_->nickname } @{$app->games->{$gid}{ais} // []} ],
+            mutant_letter => $active_game->mutant_letter,
         }
     }});
 

@@ -6,7 +6,7 @@ global:
   registry: localhost:5000
   namespace: wordwonk
   projectName: "wordwonk"
-  imageTag: 2.0.0-RC1
+  imageTag: 2.1.0
   imagePullPolicy: Always
   maxPlayers: 13
   randomLetterScoreMode: "true"
@@ -100,7 +100,7 @@ postgresql:
       tag: 1.36.1
 
 ollama:
-  enabled: true
+  enabled: false
   image:
     repository: localhost:5000/wordwonk-ollama
   service:

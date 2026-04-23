@@ -9,8 +9,8 @@ const GameArea = ({
     isAuthenticated 
 }) => {
     const { t } = useTranslation();
-    const { 
-        rack, letterValue, timeLeft, totalTime, isLocked, guess, feedback 
+    const {
+        rack, letterValue, timeLeft, totalTime, isLocked, guess, feedback, mutantLetter
     } = state;
 
     return (
@@ -26,7 +26,7 @@ const GameArea = ({
                                     if (!tile) return <div key={position} className="rack-slot empty" />;
                                     return (
                                         <div key={tile.id} className={`rack-slot ${tile.isUsed ? 'used' : ''}`} onClick={() => !tile.isUsed && interaction.moveTileToGuess(tile)}>
-                                            <Tile letter={tile.letter} value={letterValue?.[tile.letter]} disabled={tile.isUsed} />
+                                            <Tile letter={tile.letter} value={letterValue?.[tile.letter]} disabled={tile.isUsed} isMutant={!!mutantLetter && tile.letter === mutantLetter} />
                                         </div>
                                     );
                                 })}
@@ -50,7 +50,7 @@ const GameArea = ({
                                 return (
                                     <div key={i} className={`board-slot ${slot ? 'filled' : 'empty'} ${isFirstEmpty && !isLocked && timeLeft > 0 ? 'focused' : ''} ${isBonusSlot ? 'bonus' : ''}`} onClick={() => slot && interaction.returnToRack(i)}>
                                         {isBonusSlot && slot && <div className="slot-badge">+{bonusPoints}</div>}
-                                        {slot ? <Tile letter={slot.char} value={letterValue?.[slot.originalLetter || slot.char.toUpperCase()]} /> : <div className="slot-placeholder"></div>}
+                                        {slot ? <Tile letter={slot.char} value={letterValue?.[slot.originalLetter || slot.char.toUpperCase()]} isMutant={!!mutantLetter && (slot.originalLetter || slot.char.toUpperCase()) === mutantLetter} /> : <div className="slot-placeholder"></div>}
                                     </div>
                                 );
                             })}

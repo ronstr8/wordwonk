@@ -14,15 +14,17 @@ sub calculate_results ($self, $plays, $game_lang, $game_started_at = undef, $rac
     my $unique_word_bonus = $self->unique_word_bonus;
     
     my %word_to_players;
-    my %player_bonuses;  # player_id -> { duplicates => count, length_bonus => count, unique => count, quick_bonus => count, duped_by => [ { name => nickname, bonus => 1 } ] }
+    my %word_to_score;   # word => base score of the first (original) player
+    my %player_bonuses;  # player_id -> { duplicates => count, length_bonus => count, unique => count, quick_bonus => count, duped_by => [ { name => nickname, bonus => N } ] }
     my %is_duper;  # player_id -> 1 if they duplicated someone
     my %player_id_to_nickname;
-    
+
     for my $play (@$plays) {
         my $word = $play->get_column('word');
         my $player_id = $play->get_column('player_id');
-        
+
         push @{$word_to_players{$word}}, $player_id;
+        $word_to_score{$word} //= $play->get_column('score');  # first occurrence = original
         $player_id_to_nickname{$player_id} = $play->player->nickname;
         
         # Initialize bonus tracking for this player
@@ -53,16 +55,16 @@ sub calculate_results ($self, $plays, $game_lang, $game_started_at = undef, $rac
         if (scalar(@$players) > 1) {
             # First player is the original
             my $original_player = $players->[0];
-            my $duplicate_count = scalar(@$players) - 1;
-            $player_bonuses{$original_player}{duplicates} += $duplicate_count * 2;
-            
-            # Mark all subsequent players as dupers
+            my $word_score      = $word_to_score{$word} // 0;
+
+            # Mark all subsequent players as dupers; original earns the word's raw value per copy
             for my $i (1 .. $#$players) {
                 my $duper_id = $players->[$i];
                 $is_duper{$duper_id} = 1;
+                $player_bonuses{$original_player}{duplicates} += $word_score;
                 push @{$player_bonuses{$original_player}{duped_by}}, {
                     name  => $player_id_to_nickname{$duper_id},
-                    bonus => 2,
+                    bonus => $word_score,
                 };
             }
         } else {

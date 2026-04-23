@@ -22,7 +22,7 @@
         "loading": "LÄDT...",
         "connecting": "Verbindung zum Spieleserver wird hergestellt",
         "waiting_next_game": "Warten auf den Start des nächsten Spiels...",
-        "rules_summary": "Wordwonk ist ein Hochgeschwindigkeits-Vokabelduell! Bilde mit deinen Steinen das Wort mit der höchsten Punktzahl (oder das seltsamste), bevor die Zeit abläuft. Die Buchstabenwerte basieren auf ihrer Häufigkeit im Wonk-Sack: Häufige Buchstaben sind 1 Punkt wert, während seltenere Buchstaben progressiv mehr einbringen (bis zu 9 Punkte). Die zwei seltensten 'Einhorn'-Buchstaben sind 10 Punkte wert! Ein Buchstabe pro Tag ist 7 Punkte wert. Die Punktevergabe ist dynamisch: Finde ein einzigartiges Wort oder ziele auf Längenboni (+5 für 6 Buchstaben, Verdopplung für jeden weiteren). Vorsicht: Ein doppeltes Wort gibt 0 Punkte, belohnt aber den ursprünglichen Spieler mit einem Bonus!",
+        "rules_summary": "Wordwonk ist ein rasantes Vokabelduell! Nutze deine Steine, um das am hoechsten gewertete Wort zu bilden, bevor die Zeit ablauft. Die Buchstabenwerte basieren auf ihrer Haufigkeit im Wank-Beutel: Haufige Buchstaben sind 1 Punkt wert, seltenere bis zu 9 Punkte. Die zwei seltensten Einhorn-Buchstaben sind 10 Punkte wert! Ein Buchstabe ist jeden Tag 7 Punkte wert. Die Wertung ist dynamisch: Finde ein Einzigartiges Wort oder ziele auf Langenboni (+5 fur 6 Buchstaben, Verdopplung fur jeden weiteren). Achtung: Ein dupliziertes Wort bringt dir 0 Punkte, aber wenn jemand dich kopiert, erhaltst du den vollen Rohwert dieses Wortes pro Kopie. Manchmal erscheint ein leuchtend gruner Stein im Rack: Das ist der Mutantenbuchstabe, 10 Punkte wert, geboren wenn alle Spieler in der vorherigen Runde einen Bonus erzielt haben. Naturliche Selektion in Aktion.",
         "tile_frequencies": "Buchstabenhäufigkeiten",
         "connection_error": "VERBINDUNGSFEHLER",
         "reload": "SEITE NEULADEN",
@@ -116,7 +116,9 @@
         "your_performance": "Deine Leistung",
         "total_points": "Gesamtpunktzahl",
         "words_played": "Gespielte Wörter",
-        "global_top_10": "Globale Top 10"
+        "global_top_10": "Globale Top 10",
+        "the_wordwonk_is": "Der Wordwonk ist...",
+        "best_play": "Bestes Wort"
     },
     "ai": {
         "thinking": [

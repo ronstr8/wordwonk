@@ -12,7 +12,8 @@ export default function useGameController({
         setRack, setTimeLeft, setTotalTime, setResults, setIsLocked,
         setGameId, setFeedback, setGuess, setLetterValue, setTileConfig,
         setPlayerNames, playerNamesRef, setSupportedLangs,
-        setMessages, logSystemMessage, showChatToast, playerId, setNickname
+        setMessages, logSystemMessage, showChatToast, playerId, setNickname,
+        setMutantLetter
     } = state;
 
     const onChatMessage = useCallback((data) => {
@@ -79,7 +80,7 @@ export default function useGameController({
     }, [playerId, setNickname, i18n, setTileConfig, setLetterValue, setSupportedLangs, setPlayerNames]);
 
     const onGameStart = useCallback((data) => {
-        const { uuid, rack: newRackLetters, rack_size, tile_values, time_left, tile_counts, unicorns } = data.payload;
+        const { uuid, rack: newRackLetters, rack_size, tile_values, time_left, tile_counts, unicorns, mutant_letter } = data.payload;
         const newRack = newRackLetters.map((letter, idx) => ({
             id: `tile-${idx}-${Date.now()}`,
             letter,
@@ -96,9 +97,10 @@ export default function useGameController({
         setGuess(Array(rack_size || newRackLetters.length).fill(null));
         setIsLocked(false);
         setFeedback({ text: '', type: '' });
+        setMutantLetter(mutant_letter || null);
         startAmbience();
         fetchLeaderboard();
-    }, [setGameId, setRack, setTimeLeft, setTotalTime, setLetterValue, setTileConfig, setResults, setGuess, setIsLocked, setFeedback, startAmbience, fetchLeaderboard]);
+    }, [setGameId, setRack, setTimeLeft, setTotalTime, setLetterValue, setTileConfig, setResults, setGuess, setIsLocked, setFeedback, setMutantLetter, startAmbience, fetchLeaderboard]);
 
     const onTimer = useCallback((data) => {
         if (data.payload && data.payload.time_left !== undefined) {
@@ -111,9 +113,10 @@ export default function useGameController({
             setFeedback({ text: t('app.accepted'), type: 'success' });
             setIsLocked(true);
             setTimeout(() => setFeedback({ text: '', type: '' }), 5000);
+            fetchLeaderboard();
         }
         if (data.payload.score >= 40) play('bigsplat');
-    }, [playerId, setFeedback, setIsLocked, t, play]);
+    }, [playerId, setFeedback, setIsLocked, t, play, fetchLeaderboard]);
 
     const onPlayerJoined = useCallback((data) => {
         if (data.payload.id !== playerId) {

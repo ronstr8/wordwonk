@@ -1,3 +1,4 @@
+{{- if .Values.ollama.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -50,3 +51,4 @@ spec:
       port: 11434
       targetPort: 11434
   type: {{ .Values.ollama.service.type }}
+{{- end }}

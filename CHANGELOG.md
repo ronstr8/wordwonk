@@ -5,6 +5,17 @@ All notable changes to Wordwonk will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.0.0] - 2026-04-23
+
+### Added (2.0.0)
+
+- **Mutant Letter**: When every player in the most recently completed multi-player game earned at least one bonus (length, unique word, quick play, or duplicate), a randomly chosen tile in the new game's rack mutates. It glows green with a subtle throb animation and is worth 10 points — regardless of its normal value. Natural selection amongst all wordwonks, past and future.
+- **Wordwonk Banner**: The Stats panel now opens with a prominent banner identifying the current #1 player by lifetime score ("The Wordwonk is..."), along with the last word they played in a finished game and a live-updating relative timestamp (e.g. "knife (3m ago)").
+
+### Changed (2.0.0)
+
+- **Duplicate Bonus Rebalanced**: The original player of a duplicated word now earns the full raw letter value of that word per copy, replacing the previous flat +2 per copy. Rare, high-value words are now properly rewarded when others steal them.
+
 ## [1.14.0] - 2026-04-16
 
 ### Changed (1.14.0)
