@@ -21,9 +21,10 @@ yarn-error.log*
 target/
 **/*.rs.bk
 
-# Helm 
+# Helm
 helm/charts/
 helm/secrets.yaml
+helm/values.yaml
 
 # IDEs
 .vscode/

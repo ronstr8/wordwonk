@@ -58,6 +58,7 @@
 
 .wordwonk-word {
     color: #ccc;
+    text-transform: uppercase;
 }
 
 .wordwonk-ago {

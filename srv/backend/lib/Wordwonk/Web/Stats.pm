@@ -51,8 +51,9 @@ sub leaderboard ($self) {
             }
         )->first;
         if ($last_play) {
-            $leaders[0]{last_word}    = $last_play->word;
-            $leaders[0]{last_word_at} = $last_play->created_at->iso8601 . 'Z';
+            $leaders[0]{last_word}       = $last_play->word;
+            $leaders[0]{last_word_score} = int($last_play->score);
+            $leaders[0]{last_word_at}    = $last_play->created_at->iso8601 . 'Z';
         }
 
         my $best_play = $schema->resultset('Play')->search(

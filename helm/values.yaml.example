@@ -1,6 +1,6 @@
 # Global settings shared across all microservices
 global:
-  domain: arkham.fazigu.org
+  domain: your-domain.example.com
   # The single port for all traffic (Frontend, API, WS)
   externalPort: 80
   registry: localhost:5000
@@ -10,20 +10,38 @@ global:
   imagePullPolicy: Always
   maxPlayers: 13
   randomLetterScoreMode: "true"
-  kofiId: "wordwonk"
+  gameDuration: 30
+  quickBonusSeconds: 10
+  uniqueWordBonus: 1
+  rackSize: 8
+  minVowels: 2
+  minConsonants: 2
+  logLevel: info
+  defaultLanguage: en
+  chatHistorySize: 50
+  totalTiles: 100
+  kofiId: "your-kofi-id"
   kofiEnabled: false
   paypalEnabled: false
-  paypalEmail: "quinnfazigu@gmail.com"
-
+  paypalEmail: "your-email@example.com"
+  projectCodeLink: "https://github.com/your-org/wordwonk"
+  scoreAgainstAI: "true"
+  endOnAllPlayed: "false"
+  storageClass: "standard"
+  persistence:
+    manualPV: false
 
 
 # Centralized Ingress configuration
 ingress:
   enabled: true
-  host: arkham.fazigu.org
+  host: your-domain.example.com
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  tls:
+    enabled: false
+    secretName: wordwonk-tls
 
 # Subchart overrides
 frontend:
@@ -37,31 +55,58 @@ wordd:
   service:
     type: ClusterIP
     port: 2345
-
+  langs: "en,es,fr,de,ru"
 
 backend:
   enabled: true
-  image:
-    tag: "latest"
   service:
     port: 3000
+  ollama:
+    url: "http://ollama:11434"
+    model: "phi3:mini"
   database:
     url: "dbi:Pg:dbname=wordwonk;host=postgresql"
     user: "wordwonk_backend"
-    pass: "PLACEHOLDER_SEE_SECRETS_YAML"
+  env:
+    ADMIN_SMS_EMAIL: ""
+    CHAT_HISTORY_SIZE: 50
+    OLLAMA_URL: "http://ollama:11434"
+    OLLAMA_MODEL: "phi3:mini"
 
 # PostgreSQL dependency configuration
 postgresql:
   enabled: true
+  fullnameOverride: postgresql
   image:
-    tag: "latest"
+    registry: "docker.io"
+    repository: "bitnamilegacy/postgresql"
+    tag: "16.4.0-debian-12-r0"
   auth:
     database: "wordwonk"
     username: "wordwonk_backend"
-#   password: "PLACEHOLDER_SEE_SECRETS_YAML"
-#   postgresPassword: "PLACEHOLDER_SEE_SECRETS_YAML"
   primary:
+    initdb:
+      scriptsConfigMap: db-init
     persistence:
       enabled: true
-      storageClass: standard
       size: 10Gi
+  volumePermissions:
+    enabled: true
+    image:
+      repository: busybox
+      tag: 1.36.1
+
+ollama:
+  enabled: false
+  image:
+    repository: localhost:5000/wordwonk-ollama
+  service:
+    type: ClusterIP
+    port: 11434
+  resources:
+    limits:
+      cpu: "4"
+      memory: "4Gi"
+    requests:
+      cpu: "2"
+      memory: "2Gi"

@@ -6,13 +6,13 @@ function timeAgo(isoStr) {
     if (!isoStr) return null;
     const diffMs = Date.now() - new Date(isoStr).getTime();
     const s = Math.floor(diffMs / 1000);
-    if (s < 60) return `(${s}s ago)`;
+    if (s < 60) return `${s}s`;
     const m = Math.floor(s / 60);
-    if (m < 60) return `(${m}m ago)`;
+    if (m < 60) return `${m}m`;
     const h = Math.floor(m / 60);
-    if (h < 24) return `(${h}h ago)`;
+    if (h < 24) return `${h}h`;
     const d = Math.floor(h / 24);
-    return `(${d}d ago)`;
+    return `${d}d`;
 }
 
 function useTimeAgo(isoStr) {
@@ -45,7 +45,7 @@ const WordwonkBanner = ({ leader }) => {
             {leader.last_word && (
                 <div className="wordwonk-last-word">
                     <span className="wordwonk-word">{leader.last_word}</span>
-                    {ago && <span className="wordwonk-ago">{ago}</span>}
+                    <span className="wordwonk-ago">({leader.last_word_score}pts{ago ? `, ${ago} ago` : ''})</span>
                 </div>
             )}
         </div>
